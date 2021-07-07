@@ -1,19 +1,19 @@
-# `CHANGE-ME` README
+# `seguro-worker-lib` README
 
-The CHANGE-ME library.
+The seguro-worker-lib library.
 
 ## Usage
 
 Add as a dependency to a Node.js project:
 
 ```bash
-yarn add @conet-project/CHANGE-ME
+yarn add @conet-project/seguro-worker-lib
 ```
 
 Import from the package:
 
 ```ts
-import { Person, getGreeting } from '@conet-project/CHANGE-ME'
+import { Person, getGreeting } from '@conet-project/seguro-worker-lib'
 
 const person: Person = { name: 'John' }
 

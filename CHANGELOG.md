@@ -1,4 +1,4 @@
-# `CHANGE-ME` CHANGELOG
+# `seguro-worker-lib` CHANGELOG
 
 ## `0.1.0`
 
