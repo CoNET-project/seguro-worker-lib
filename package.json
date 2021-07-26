@@ -6,7 +6,7 @@
         "./build"
     ],
     "main": "./build/index.js",
-    "types": "./build/types/index.d.ts",
+    "types": "./build/index.d.ts",
     "scripts": {
         "lint": "eslint . --ext .ts",
         "test": "jest",
