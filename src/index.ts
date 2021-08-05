@@ -1,1 +1,1 @@
-export { Person, getGreeting } from './utilities/utilities'
+export { startWorker, getSeguroInitData } from './workerBridge/initWorkers'

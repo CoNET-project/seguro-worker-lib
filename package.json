@@ -1,6 +1,6 @@
 {
     "name": "@conet-project/seguro-worker-lib",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "license": "UNLICENSED",
     "files": [
         "./build"
@@ -13,13 +13,16 @@
         "build": "tsc --project ./tsconfig.build.json",
         "clean": "rm -rf ./node_modules ./build"
     },
-    "dependencies": {},
+    "dependencies": {
+        "uuid": "^8.3.2"
+    },
     "devDependencies": {
         "@types/jest": "^26.0.23",
         "@types/node": "^16.0.0",
+        "@types/uuid": "^8.3.1",
         "@typescript-eslint/eslint-plugin": "^4.28.1",
         "@typescript-eslint/parser": "^4.28.1",
-        "eslint": "^7.29.0",
+        "eslint": "^7.32.0",
         "eslint-config-airbnb-base": "^14.2.1",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-import": "^2.23.4",

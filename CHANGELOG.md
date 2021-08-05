@@ -1,5 +1,27 @@
 # `seguro-worker-lib` CHANGELOG
 
+## `0.3.0`
+
+### Additions
+
+- Added src/workerBridge folder
+- Added src/bridge.ts
+- Added src/define.d.ts
+- Added src/initWorkers.ts
+- Added src/SubWorker.ts
+- Added src/workerBridge.ts
+
+### Changes
+
+- Added export src/index.ts 
+
+
+### Fixes
+
+- None.
+
+---
+
 ## `0.2.1`
 
 ### Additions
