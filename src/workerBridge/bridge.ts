@@ -1,17 +1,16 @@
-import type workerBridge from './workerBridge'
-export const getSeguroInitData = ( bridgeWorker: workerBridge | null ) => {
+import type WorkerBridge from './WorkerBridge'
+export const getSeguroInitData = ( bridgeWorker: WorkerBridge | null ) => {
     if ( bridgeWorker ) {
-        return bridgeWorker.seguroInitData
+        return bridgeWorker.getSeguroInitData()
     }
     return null
 }
 
-export const initSeguroData = (
-    password: string,
-    
-) => new Promise (( 
-    resolve,
-    reject
-) => {
-
-})
+// export const initSeguroData = (
+//     password: string
+// ) => new Promise((
+//     resolve,
+//     reject
+// ) => {
+//
+// })

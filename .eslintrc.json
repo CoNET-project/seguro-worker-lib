@@ -32,7 +32,7 @@
                 "argsIgnorePattern": "^_"
             }
         ],
-        "array-bracket-spacing": "error",
+        "array-bracket-spacing": "off",
         "arrow-body-style": "off",
         "arrow-spacing": "error",
         "comma-dangle": [
@@ -53,7 +53,7 @@
         "lines-between-class-members": "off",
         "max-len": [
             "error",
-            100
+            160
         ],
         "no-async-promise-executor": "off",
         "no-new": "off",
@@ -67,6 +67,7 @@
             "error",
             "never"
         ],
-        "spaced-comment": "off"
+        "spaced-comment": "off",
+        "space-in-parens": "off"
     }
 }
