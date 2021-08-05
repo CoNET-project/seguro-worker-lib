@@ -1,37 +1,38 @@
-import subworker from './SubWorker'
+import SubWorker from './SubWorker'
 
-
-export default class workerBridge {
+export default class WorkerBridge {
     public workerBridgeClassReady = false
     public mainWorker
-    public _seguroInitData = ''
-    get seguroInitData () {
-        if ( this.workerBridgeClassReady ) {
-            return this._seguroInitData
+    public seguroInitDataTemp = ''
+    get seguroInitData() {
+        if (this.workerBridgeClassReady) {
+            return this.seguroInitDataTemp
         }
         return null
     }
 
-    public initSeguro () {
-        return new Promise (( resolve, reject ) => {
-            const cmd: worker_command = {
-                cmd: 'initSeguroData',
+    // public initSeguro() {
+    //     return new Promise(() => {
+    //         const cmd: worker_command = {
+    //             cmd: 'initSeguroData'
                 
-            }
-            this.mainWorker.append ( cmd, cmd => {
+    //         }
+    //         this.mainWorker.append(cmd, (cmd) => {
                 
-            })
-        })
-    }
+    //         })
+    //     })
+    // }
 
-    constructor ( 
+    constructor( 
         public callback: () => void 
-    ){
-        const port = parseInt ( process.env.NODE_ENV === 'development' ? '3001': location.port || '3001')
-        this.mainWorker = new subworker ( 'mainWorker.js',  port, init => {
+    ) {
+        const testEnv = process.env.NODE_ENV === 'development'
+        const portText = testEnv ? '3001' : window.location.port || '3001'
+        const port = parseInt(portText, 10)
+        this.mainWorker = new SubWorker('mainWorker.js', port, (init) => {
             this.workerBridgeClassReady = true
-            this._seguroInitData = init
-            return this.callback ()
+            this.seguroInitDataTemp = init
+            return this.callback()
         })
     }
 }
