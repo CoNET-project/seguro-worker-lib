@@ -5,3 +5,9 @@ export const getSeguroInitData = (bridgeWorker: workerBridge | null) => {
     }
     return null
 }
+export const helloWorld = ( bridgeWorker: workerBridge | null ) => {
+    if ( bridgeWorker ) {
+        return bridgeWorker.helloWorld ()
+    }
+    return null
+}
