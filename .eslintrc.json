@@ -67,6 +67,7 @@
             "error",
             "never"
         ],
-        "spaced-comment": "off"
+        "spaced-comment": "off",
+        "space-in-parens": "off"
     }
 }

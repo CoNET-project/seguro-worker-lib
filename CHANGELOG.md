@@ -1,5 +1,22 @@
 # `seguro-worker-lib` CHANGELOG
 
+## `0.4.0`
+
+### Additions
+
+- Add `hello world` API interface to bridge worker.
+
+### Changes
+
+- Rename `workerBridge.ts` to `WorkerBridge.ts`.
+- Rename interface `workerCommand` to `WorkerCommand`.
+
+### Fixes
+
+- None.
+
+---
+
 ## `0.3.0`
 
 ### Additions

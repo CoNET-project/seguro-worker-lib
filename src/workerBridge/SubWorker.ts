@@ -1,8 +1,8 @@
 import { v4 as getUUIDv4 } from 'uuid'
 import { Buffer } from 'buffer'
-import { workerCommand } from './index'
-const workerCros = ( 
-    url: string 
+import { WorkerCommand } from './index'
+const workerCros = (
+    url: string
 ) => {
     const iss = `importScripts('${url}');`
     return URL.createObjectURL(new Blob([iss], { type: 'application/javascript' }))
@@ -10,12 +10,12 @@ const workerCros = (
 
 export default class SubWorker {
     public worker: Worker
-    private cmdArray: Map < string, (cmd: workerCommand) => void > = new Map()
-    private catchReturn( 
-        message: string 
+    private cmdArray: Map < string, (cmd: WorkerCommand) => void > = new Map()
+    private catchReturn(
+        message: string
     ) {
         const jsonData = Buffer.from(message).toString()
-        let cmd: workerCommand
+        let cmd: WorkerCommand
 
         try {
             cmd = JSON.parse(jsonData)
@@ -42,10 +42,10 @@ export default class SubWorker {
         return getCallBack(cmd)
     }
 
-    constructor( 
+    constructor(
         url: string,
         portNumber: number,
-        private readyBack: (init: string) => void 
+        private readyBack: (init: string) => void
     ) {
         const envTest = process.env.NODE_ENV === 'development'
         const localhost = envTest ? 'http://localhost:3001/' : `http://localhost:${portNumber}/`
@@ -64,8 +64,8 @@ export default class SubWorker {
     }
 
     public append(
-        message: workerCommand,
-        CallBack: (cmd?: workerCommand) => void 
+        message: WorkerCommand,
+        CallBack: (cmd?: WorkerCommand) => void
     ) {
         const message1 = message
         message1.uuid = getUUIDv4()

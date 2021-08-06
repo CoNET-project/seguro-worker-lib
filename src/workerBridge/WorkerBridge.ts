@@ -15,16 +15,16 @@ export default class WorkerBridge {
     //     return new Promise(() => {
     //         const cmd: worker_command = {
     //             cmd: 'initSeguroData'
-                
+
     //         }
     //         this.mainWorker.append(cmd, (cmd) => {
-                
+
     //         })
     //     })
     // }
 
-    constructor( 
-        public callback: () => void 
+    constructor(
+        public callback: () => void
     ) {
         const testEnv = process.env.NODE_ENV === 'development'
         const portText = testEnv ? '3001' : window.location.port || '3001'
@@ -36,20 +36,18 @@ export default class WorkerBridge {
         })
     }
 
-    public helloWorld () {
+    public helloWorld() {
         const cmd: workerCommand = {
             cmd: 'helloWorld'
         }
-        return new Promise((resolve, reject) =>
-            this.mainWorker.append (cmd, response => {
-                if (!response) {
-                    return reject ( new Error ('Workers have no response!'))
-                }
-                if (response.err) {
-                    return reject ( new Error (response.err))
-                }
-                return resolve ( response )
-            })
-        )
+        return new Promise((resolve, reject) => this.mainWorker.append(cmd, (response) => {
+            if (!response) {
+                return reject( new Error('Workers have no response!'))
+            }
+            if (response.err) {
+                return reject( new Error(response.err))
+            }
+            return resolve( response )
+        }))
     }
 }
