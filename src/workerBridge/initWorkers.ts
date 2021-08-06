@@ -1,10 +1,10 @@
-import WorkerBridge from './workerBridge'
+import WorkerBridge from './WorkerBridge'
 import * as bridge from './bridge'
 
 let bridgeWorker: WorkerBridge | null = null
 
 export const startWorker = () => {
-    return new Promise(( 
+    return new Promise((
         resolve,
         reject
     ) => {
@@ -14,20 +14,22 @@ export const startWorker = () => {
 
         const ready = () => {
             clearTimeout(time)
-                
+
             // if (!bridgeWorker?.seguroInitData) {
             //     return bridgeWorker?.initSeguro().then((data) => {
             //         console.log(data)
             //         return resolve(null)
             //     })
-                    
+
             // }
             resolve(null)
         }
-        
+
         bridgeWorker = new WorkerBridge(ready)
-        
+
     })
 }
 
 export const getSeguroInitData = () => bridge.getSeguroInitData(bridgeWorker)
+
+export const helloWorld = () => bridge.helloWorld(bridgeWorker)
