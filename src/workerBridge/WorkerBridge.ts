@@ -1,5 +1,5 @@
 import SubWorker from './SubWorker'
-import type { WorkerCommand, HelloWorkResolve } from './index'
+import type { WorkerCommand, HelloWorldResolve } from './index'
 export default class WorkerBridge {
     public workerBridgeClassReady = false
     public mainWorker
@@ -36,16 +36,16 @@ export default class WorkerBridge {
         })
     }
 
-    public helloWorld(): Promise<HelloWorkResolve> {
+    public helloWorld(): Promise<HelloWorldResolve> {
         const cmd: WorkerCommand = {
             cmd: 'helloWorld'
         }
         return new Promise((resolve ) => this.mainWorker.append(cmd, (response) => {
             if (!response) {
-                return resolve(['NOTREADY'])
+                return resolve(['NOT_READY'])
             }
             if (response.err) {
-                return resolve(['UNKNOW_COMMAND'])
+                return resolve(['UNKNOWN_COMMAND'])
             }
             return resolve(['SUCCESS', response.data])
         }))

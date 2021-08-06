@@ -5,6 +5,6 @@ export interface WorkerCommand {
     err?: string
 }
 
-export type WorkerCallStatus = 'SUCCESS' | 'NOTREADY' | 'UNKNOW_COMMAND'
+export type WorkerCallStatus = 'SUCCESS' | 'NOT_READY' | 'UNKNOWN_COMMAND'
 
-export type HelloWorkResolve = [status: WorkerCallStatus, payload?: string]
+export type HelloWorldResolve = [status: WorkerCallStatus, payload?: string]
