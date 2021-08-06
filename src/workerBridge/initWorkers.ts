@@ -31,3 +31,5 @@ export const startWorker = () => {
 }
 
 export const getSeguroInitData = () => bridge.getSeguroInitData(bridgeWorker)
+
+export const helloWorld = () => bridge.helloWorld (bridgeWorker)
