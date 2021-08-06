@@ -1,1 +1,1 @@
-export { startWorker, getSeguroInitData } from './workerBridge/initWorkers'
+export { startWorker, getSeguroInitData, helloWorld } from './workerBridge/initWorkers'
