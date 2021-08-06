@@ -47,7 +47,7 @@ export default class WorkerBridge {
             if (response.err) {
                 return reject( new Error(response.err))
             }
-            return resolve( response )
+            return resolve( response.data )
         }))
     }
 }
