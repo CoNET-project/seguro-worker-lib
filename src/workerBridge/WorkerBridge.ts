@@ -1,5 +1,5 @@
 import SubWorker from './SubWorker'
-import type { workerCommand } from './index'
+import type { WorkerCommand } from './index'
 export default class WorkerBridge {
     public workerBridgeClassReady = false
     public mainWorker
@@ -37,7 +37,7 @@ export default class WorkerBridge {
     }
 
     public helloWorld() {
-        const cmd: workerCommand = {
+        const cmd: WorkerCommand = {
             cmd: 'helloWorld'
         }
         return new Promise((resolve, reject) => this.mainWorker.append(cmd, (response) => {
