@@ -1,6 +1,6 @@
 import WorkerBridge from './WorkerBridge'
 import * as bridge from './bridge'
-
+import type { HelloWorkResolve } from './index'
 let bridgeWorker: WorkerBridge | null = null
 
 export const startWorker = () => {
@@ -32,4 +32,4 @@ export const startWorker = () => {
 
 export const getSeguroInitData = () => bridge.getSeguroInitData(bridgeWorker)
 
-export const helloWorld = () => bridge.helloWorld(bridgeWorker)
+export const helloWorld = (): Promise<HelloWorkResolve> | null => bridge.helloWorld(bridgeWorker)
