@@ -1,5 +1,21 @@
 # `seguro-worker-lib` CHANGELOG
 
+## `0.4.1`
+
+### Additions
+
+- None.
+
+### Changes
+
+- None.
+
+### Fixes
+
+- Added typescript type define to helloWorld.
+
+---
+
 ## `0.4.0`
 
 ### Additions
