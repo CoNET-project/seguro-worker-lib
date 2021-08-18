@@ -1,53 +1,42 @@
 import SubWorker from './SubWorker'
-import type { WorkerCommand, HelloWorldResolve } from './index'
+import type { HelloWorldResolve, ContainerData } from './index'
+
+const envTest = process.env.NODE_ENV === 'development'
+const localhost = `http://localhost:${envTest ? '3001' : window.location.port}/`
+const helloPath = `${localhost}hello`
+
+const helloWorld = ():Promise<HelloWorldResolve> => new Promise((resolve) => fetch(helloPath)
+    .then((response) => response.json())
+    .then((data) => {
+        return resolve(['SUCCESS', data])
+    }).catch(() => {
+        return resolve(['NOT_READY'])
+    }))
+
 export default class WorkerBridge {
-    public workerBridgeClassReady = false
-    public mainWorker
-    public seguroInitDataTemp = ''
-    get seguroInitData() {
-        if (this.workerBridgeClassReady) {
-            return this.seguroInitDataTemp
+    public encryptWorker
+    public storageWorker
+    public storageWorkerReady = false
+    public encryptWorkerReady = false
+    public seguroInitDataTemp: ContainerData | null = null
+    
+    private checkInitDone() {
+        if ( this.storageWorkerReady && this.encryptWorkerReady ) {
+            return this.callback(this.seguroInitDataTemp)
         }
-        return null
     }
 
-    // public initSeguro() {
-    //     return new Promise(() => {
-    //         const cmd: worker_command = {
-    //             cmd: 'initSeguroData'
-
-    //         }
-    //         this.mainWorker.append(cmd, (cmd) => {
-
-    //         })
-    //     })
-    // }
-
     constructor(
-        public callback: () => void
+        public callback: (init: ContainerData| null) => void
     ) {
-        const testEnv = process.env.NODE_ENV === 'development'
-        const portText = testEnv ? '3001' : window.location.port || '3001'
-        const port = parseInt(portText, 10)
-        this.mainWorker = new SubWorker( 'mainWorker.js', port, (init) => {
-            this.workerBridgeClassReady = true
+        this.encryptWorker = new SubWorker('encrypt.js', () => {
+            return this.checkInitDone()
+        })
+        this.storageWorker = new SubWorker('storage.js', (init: ContainerData | null ) => {
             this.seguroInitDataTemp = init
-            return this.callback()
+            return this.checkInitDone()
         })
     }
 
-    public helloWorld(): Promise<HelloWorldResolve> {
-        const cmd: WorkerCommand = {
-            cmd: 'helloWorld'
-        }
-        return new Promise((resolve ) => this.mainWorker.append(cmd, (response) => {
-            if (!response) {
-                return resolve(['NOT_READY'])
-            }
-            if (response.err) {
-                return resolve(['UNKNOWN_COMMAND'])
-            }
-            return resolve(['SUCCESS', response.data])
-        }))
-    }
+    public helloWorld = () => helloWorld()
 }

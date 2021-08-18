@@ -1,35 +1,25 @@
 import WorkerBridge from './WorkerBridge'
 import * as bridge from './bridge'
-import type { HelloWorldResolve } from './index'
-let bridgeWorker: WorkerBridge | null = null
+import type { HelloWorldResolve, StartWorkerResolve } from './index'
+let bridgeWorker: WorkerBridge
 
-export const startWorker = () => {
+export const startWorker = (): Promise < StartWorkerResolve > => {
     return new Promise((
-        resolve,
-        reject
+        resolve
     ) => {
         const time = setTimeout(() => {
-            return reject(new Error('Worker Factory Timeout Error!'))
-        }, 5000)
+            return resolve(['TIME_OUT'])
+        }, 10000)
 
         const ready = () => {
             clearTimeout(time)
-
-            // if (!bridgeWorker?.seguroInitData) {
-            //     return bridgeWorker?.initSeguro().then((data) => {
-            //         console.log(data)
-            //         return resolve(null)
-            //     })
-
-            // }
-            resolve(null)
+            
+            resolve(['SUCCESS'])
         }
 
         bridgeWorker = new WorkerBridge(ready)
 
     })
 }
-
-export const getSeguroInitData = () => bridge.getSeguroInitData(bridgeWorker)
 
 export const helloWorld = (): Promise<HelloWorldResolve> | null => bridge.helloWorld(bridgeWorker)
