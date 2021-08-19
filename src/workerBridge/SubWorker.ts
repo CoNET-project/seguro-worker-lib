@@ -1,6 +1,6 @@
 import { v4 as getUUIDv4 } from 'uuid'
 import { Buffer } from 'buffer'
-import { WorkerCommand } from './index'
+import { WorkerCommand, ContainerData } from './index'
 const workerCros = (
     url: string
 ) => {
@@ -26,12 +26,12 @@ export default class SubWorker {
         }
 
         let getCallBack = null
-        if (cmd.uuid) {
+        if (cmd?.uuid) {
             getCallBack = this.cmdArray.get(cmd.uuid)
         }
 
         if (!getCallBack) {
-            if (/^ready$/i.test(cmd.cmd)) {
+            if (cmd.cmd === 'READY') {
                 return this.readyBack(cmd.data)
             }
             /* eslint-disable no-console */
@@ -44,12 +44,10 @@ export default class SubWorker {
 
     constructor(
         url: string,
-        portNumber: number,
-        private readyBack: (init: string) => void
+        private readyBack: (init: ContainerData) => void
     ) {
         const envTest = process.env.NODE_ENV === 'development'
-        const localhost = envTest ? 'http://localhost:3001/' : `http://localhost:${portNumber}/`
-
+        const localhost = `http://localhost:${envTest ? '3001' : window.location.port}/`
         const storageUrlBlob = workerCros(localhost + url)
         this.worker = new Worker(storageUrlBlob, { name: localhost })
         URL.revokeObjectURL(storageUrlBlob)
