@@ -31,7 +31,7 @@ export default class WorkerBridge {
             }
             return this.encryptWorker.append(cmd, (err, _cmd) => {
                 if ( err ) {
-                    return resolve(['NOT_READY'])
+                    return resolve(['FAILURE'])
                 }
                 const data = _cmd.data[0]
                 if ( typeof data === 'number' ) {
@@ -80,7 +80,9 @@ export default class WorkerBridge {
         }
         if ( this.seguroInitDataTemp.passcord.status === 'UNDEFINED' ) {
             this.seguroInitDataTemp.passcord.createPasscode = this.createPasscode
-        } else {
+        }
+
+        if ( this.seguroInitDataTemp.passcord.status === 'LOCKED' ) {
             this.seguroInitDataTemp.passcord.testPasscord = this.testPasscord
         }
         
