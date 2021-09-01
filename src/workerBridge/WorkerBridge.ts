@@ -1,4 +1,3 @@
-import { waterfall } from 'async'
 import SubWorker from './SubWorker'
 import { logger } from './util'
 import type * as Type from './index'
@@ -22,7 +21,7 @@ export default class WorkerBridge {
     private testPasscord = (
         passcode: string,
         progressCallback: ( progress: number ) => void
-        ): Promise < Type.passcodeUnlockStatus > => {
+    ): Promise < Type.passcodeUnlockStatus > => {
         return new Promise((
             resolve
         ) => {
@@ -35,8 +34,8 @@ export default class WorkerBridge {
                     return resolve(['NOT_READY'])
                 }
                 const data = _cmd.data[0]
-                if ( typeof data ==='number' ) {
-                    return progressCallback (data)
+                if ( typeof data === 'number' ) {
+                    return progressCallback(data)
                 }
                 return resolve(['SUCCESS', data])
             })
@@ -47,33 +46,36 @@ export default class WorkerBridge {
     private createPasscode = ( 
         passcode: string,
         progressCallback: ( progress: number ) => void
-        ): Promise < Type.StartWorkerResolve > => {
+    ): Promise < Type.StartWorkerResolve > => {
         return new Promise((
             resolve
         ) => {
             const cmd:Type.WorkerCommand = {
                 cmd: 'encrypt_createPasscode',
-                data: [ passcode, this.seguroInitDataTemp ]
+                data: [passcode, this.seguroInitDataTemp]
             }
             return this.encryptWorker.append(
                 cmd, (err, _cmd) => {
-                if ( err ) {
-                    logger ('createPasscode ERROR', err)
-                    return resolve(['NOT_READY'])
+                    if ( err ) {
+                        logger('createPasscode ERROR', err)
+                        return resolve(['NOT_READY'])
+                    }
+                    const data = _cmd.data[0]
+                    if ( typeof data === 'number' ) {
+                        return progressCallback(data)
+                    }
+                    this.seguroInitDataTemp = data
+                    
+                    return resolve(['SUCCESS', data])
                 }
-                const data = _cmd.data[0]
-                if ( typeof data ==='number' ) {
-                    return progressCallback (data)
-                }
-                return resolve(['SUCCESS',this.seguroInitDataTemp = data])
-            })
+            )
             
         })
     }
 
     private initContainerData() {
         if ( !this.seguroInitDataTemp ) {
-            logger ('ERROR: have no this.seguroInitDataTemp')
+            logger('ERROR: have no this.seguroInitDataTemp')
             return undefined
         }
         if ( this.seguroInitDataTemp.passcord.status === 'UNDEFINED' ) {
@@ -92,30 +94,30 @@ export default class WorkerBridge {
     ) {
         this.encryptWorker = new SubWorker('encrypt.js', (init: any | null ) => {
             this.encryptWorkerReady = true
-            this.seguroInitDataTemp = init[0]
+            const [InitData] = init
+            this.seguroInitDataTemp = InitData
             
-            const ret = this.initContainerData ()
-            this.callback (['SUCCESS', ret])
-            if ( this.seguroInitDataTemp?.passcord.status === 'UNDEFINED') {
-                return this.createPasscode('223344', (process) => {
-                    return //logger (`process: [${ process }]`)
-                }).then ( n => {
-                    logger (`createPasscode SUCCESS`, n )
-                }).catch ( ex => {
-                    logger (`createPasscode ERROR`, ex )
-                })
-            }
+            const ret = this.initContainerData()
+            this.callback(['SUCCESS', ret])
+            // if ( this.seguroInitDataTemp?.passcord.status === 'UNDEFINED') {
+            //     return this.createPasscode('223344', () => {
+            //         //logger (`process: [${ process }]`)
+            //     }).then( (n) => {
+            //         logger('createPasscode SUCCESS', n )
+            //     }).catch( (ex) => {
+            //         logger('createPasscode ERROR', ex )
+            //     })
+            // }
 
-            if ( this.seguroInitDataTemp?.passcord.status === 'LOCKED') {
-                return this.testPasscord ('223344', () => {
+            // if ( this.seguroInitDataTemp?.passcord.status === 'LOCKED') {
+            //     return this.testPasscord('223344', () => {
 
-                }).then (n => {
-                    logger (n)
-                }).catch (ex => {
-                    logger (`testPasscord Error`, ex )
-                })
-            }
-            
+            //     }).then((n) => {
+            //         logger(n)
+            //     }).catch((ex) => {
+            //         logger('testPasscord Error', ex )
+            //     })
+            // }
             
         })
     }
