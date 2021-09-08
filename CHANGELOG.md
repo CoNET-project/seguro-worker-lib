@@ -1,5 +1,21 @@
 # `seguro-worker-lib` CHANGELOG
 
+## `0.6.0`
+
+### Additions
+
+- Lock
+
+### Changes
+
+- None.
+
+### Fixes
+
+- None.
+
+---
+
 ## `0.5.0`
 
 ### Additions
