@@ -26,7 +26,6 @@ export default class SubWorker {
         }
 
         let getCallBack = null
-
         if (cmd?.uuid) {
             getCallBack = this.cmdArray.get(cmd.uuid)
         }
