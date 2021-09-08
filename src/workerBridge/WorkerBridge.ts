@@ -108,7 +108,8 @@ export default class WorkerBridge {
                         logger('createPasscode ERROR', err)
                         return resolve(['NOT_READY'])
                     }
-                    this.seguroInitDataTemp = _cmd.data[0]
+                    const data = _cmd.data[0]
+                    this.seguroInitDataTemp = data
                     return resolve(['SUCCESS', this.initUIMethod()])
                 }
             )
@@ -128,9 +129,7 @@ export default class WorkerBridge {
             
             this.callback(['SUCCESS', this.initUIMethod()])
             
-            
             //         for TEST 
-            
             
             // if ( this.seguroInitDataTemp?.passcord.status === 'UNDEFINED') {
             //     return this.createPasscode('223344', () => {
