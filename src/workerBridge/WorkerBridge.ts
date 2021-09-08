@@ -93,7 +93,9 @@ export default class WorkerBridge {
         return this.seguroInitDataTemp
     }
 
-    private lock = (): Promise <[Type.WorkerCallStatus]> => {
+    private lock = (
+
+    ): Promise < Type.StartWorkerResolve > => {
         return new Promise((
             resolve
         ) => {
@@ -106,8 +108,9 @@ export default class WorkerBridge {
                         logger('createPasscode ERROR', err)
                         return resolve(['NOT_READY'])
                     }
-                    
-                    return resolve(['SUCCESS'])
+                    const data = _cmd.data[0]
+                    this.seguroInitDataTemp = data
+                    return resolve(['SUCCESS', this.initUIMethod()])
                 }
             )
             
@@ -124,13 +127,10 @@ export default class WorkerBridge {
             const [InitData] = init
             this.seguroInitDataTemp = InitData
             
-            const ret = this.initUIMethod()
-            this.callback(['SUCCESS', ret])
-            //
-            //
-            //          for TEST 
-            //
-            //
+            this.callback(['SUCCESS', this.initUIMethod()])
+            
+            //         for TEST 
+            
             // if ( this.seguroInitDataTemp?.passcord.status === 'UNDEFINED') {
             //     return this.createPasscode('223344', () => {
             //         //logger (`process: [${ process }]`)
@@ -140,13 +140,19 @@ export default class WorkerBridge {
             //         logger('createPasscode ERROR', ex )
             //     })
             // }
-            //
+            
             // if ( this.seguroInitDataTemp?.passcord.status === 'LOCKED') {
             //     return this.testPasscord('223344', () => {
             //         //logger (`process: [${ process }]`)
             //     }).then((n) => {
             //         logger('testPasscord SUCCESS!', n)
-            //     }).catch((ex) => {
+            //         return this.lock ()
+
+            //     })
+            //     .then (n => {
+            //         logger (`Lock success!`, n )
+            //     })
+            //     .catch((ex) => {
             //         logger('testPasscord Error', ex )
             //     })
             // }
