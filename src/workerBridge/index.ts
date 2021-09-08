@@ -1,9 +1,8 @@
 export type WorkerCommandErrorType = 'NOT_READY'|'INVALID_DATA'|'NO_UUID'|'INVALID_COMMAND'
 
 export type WorkerCommandType = 'helloWorld'|
-'READY'|
-'encrypt_TestPasscord'|
-'encrypt_createPasscode'
+'READY'|'encrypt_TestPasscord'|'encrypt_createPasscode'|'encrypt_lock'
+
 export type WorkerCallStatus = 'SUCCESS' | 'NOT_READY' | 'UNKNOWN_COMMAND' | 'TIME_OUT'
 export type PasscodeStatus = 'LOCKED' | 'UNLOCKED' | 'UNDEFINED'
 export type ColorTheme = 'LIGHT' | 'DARK'
@@ -47,6 +46,7 @@ interface Passcord {
         passcode: string,
         progressCallback: ( progress: number ) => void
     ) => Promise <[WorkerCallStatus, ContainerData?]>
+    lock: () => Promise <[WorkerCallStatus]>
 }
 
 export interface WorkerCommand {

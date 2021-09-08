@@ -37,7 +37,8 @@ export default class WorkerBridge {
                 if ( typeof data === 'number' ) {
                     return progressCallback(data)
                 }
-                return resolve(['SUCCESS', data])
+                this.seguroInitDataTemp = data
+                return resolve(['SUCCESS', this.initUIMethod()])
             })
             
         })
@@ -65,15 +66,14 @@ export default class WorkerBridge {
                         return progressCallback(data)
                     }
                     this.seguroInitDataTemp = data
-                    
-                    return resolve(['SUCCESS', data])
+                    return resolve(['SUCCESS', this.initUIMethod()])
                 }
             )
             
         })
     }
 
-    private initContainerData() {
+    private initUIMethod() {
         if ( !this.seguroInitDataTemp ) {
             logger('ERROR: have no this.seguroInitDataTemp')
             return undefined
@@ -85,8 +85,33 @@ export default class WorkerBridge {
         if ( this.seguroInitDataTemp.passcord.status === 'LOCKED' ) {
             this.seguroInitDataTemp.passcord.testPasscord = this.testPasscord
         }
+
+        if ( this.seguroInitDataTemp.passcord.status === 'UNLOCKED' ) {
+            this.seguroInitDataTemp.passcord.lock = this.lock
+        }
         
         return this.seguroInitDataTemp
+    }
+
+    private lock = (): Promise <[Type.WorkerCallStatus]> => {
+        return new Promise((
+            resolve
+        ) => {
+            const cmd:Type.WorkerCommand = {
+                cmd: 'encrypt_lock'
+            }
+            return this.encryptWorker.append(
+                cmd, (err, _cmd) => {
+                    if ( err ) {
+                        logger('createPasscode ERROR', err)
+                        return resolve(['NOT_READY'])
+                    }
+                    
+                    return resolve(['SUCCESS'])
+                }
+            )
+            
+        })
     }
     
     public encryptWorkerReady = false
@@ -99,23 +124,28 @@ export default class WorkerBridge {
             const [InitData] = init
             this.seguroInitDataTemp = InitData
             
-            const ret = this.initContainerData()
+            const ret = this.initUIMethod()
             this.callback(['SUCCESS', ret])
+            //
+            //
+            //          for TEST 
+            //
+            //
             // if ( this.seguroInitDataTemp?.passcord.status === 'UNDEFINED') {
             //     return this.createPasscode('223344', () => {
             //         //logger (`process: [${ process }]`)
-            //     }).then( (n) => {
-            //         logger('createPasscode SUCCESS', n )
+            //     }).then((data) => { 
+            //         logger('createPasscode SUCCESS', data )
             //     }).catch( (ex) => {
             //         logger('createPasscode ERROR', ex )
             //     })
             // }
-
+            //
             // if ( this.seguroInitDataTemp?.passcord.status === 'LOCKED') {
             //     return this.testPasscord('223344', () => {
-
+            //         //logger (`process: [${ process }]`)
             //     }).then((n) => {
-            //         logger(n)
+            //         logger('testPasscord SUCCESS!', n)
             //     }).catch((ex) => {
             //         logger('testPasscord Error', ex )
             //     })
