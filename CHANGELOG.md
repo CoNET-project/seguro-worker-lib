@@ -1,5 +1,41 @@
 # `seguro-worker-lib` CHANGELOG
 
+## `0.6.0`
+
+### Additions
+
+- Lock
+
+### Changes
+
+- None.
+
+### Fixes
+
+- None.
+
+---
+
+## `0.5.0`
+
+### Additions
+
+- testPasscord
+
+- createPasscode
+
+- initContainerData
+
+### Changes
+
+- None.
+
+### Fixes
+
+- None.
+
+---
+
 ## `0.4.2`
 
 ### Additions

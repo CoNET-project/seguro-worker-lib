@@ -1,24 +1,24 @@
 import WorkerBridge from './WorkerBridge'
 import * as bridge from './bridge'
 import type { HelloWorldResolve, StartWorkerResolve } from './index'
+import { logger } from './util'
 let bridgeWorker: WorkerBridge
 
 export const startWorker = (): Promise < StartWorkerResolve > => {
     return new Promise((
         resolve
     ) => {
+        logger('startWorker')
         const time = setTimeout(() => {
             return resolve(['TIME_OUT'])
-        }, 10000)
+        }, 5000)
 
-        const ready = () => {
+        const ready = ( data: StartWorkerResolve) => {
             clearTimeout(time)
-            
-            resolve(['SUCCESS'])
+            resolve(data)
         }
-
+        
         bridgeWorker = new WorkerBridge(ready)
-
     })
 }
 
