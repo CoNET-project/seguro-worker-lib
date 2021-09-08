@@ -46,7 +46,7 @@ interface Passcord {
         passcode: string,
         progressCallback: ( progress: number ) => void
     ) => Promise <[WorkerCallStatus, ContainerData?]>
-    lock: () => Promise <[WorkerCallStatus]>
+    lock: () => Promise <[WorkerCallStatus, ContainerData?]>
 }
 
 export interface WorkerCommand {
