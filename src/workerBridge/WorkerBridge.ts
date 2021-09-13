@@ -78,29 +78,65 @@ export default class WorkerBridge {
             logger('ERROR: have no this.seguroInitDataTemp')
             return undefined
         }
-        if ( this.seguroInitDataTemp.passcord.status === 'UNDEFINED' ) {
-            this.seguroInitDataTemp.passcord.createPasscode = this.createPasscode
-        }
 
-        if ( this.seguroInitDataTemp.passcord.status === 'LOCKED' ) {
-            this.seguroInitDataTemp.passcord.testPasscord = this.testPasscord
+        switch (this.seguroInitDataTemp.passcode.status) {
+            case 'NOT_SET': {
+                this.seguroInitDataTemp.passcode = {
+                    createPasscode: this.createPasscode,
+                    status: 'NOT_SET'
+                }
+                return this.seguroInitDataTemp
+            }
+            case 'LOCKED': {
+                this.seguroInitDataTemp.passcode = {
+                    status: 'LOCKED',
+                    testPasscode: this.testPasscord,
+                    deletePasscode: this.deletePasscode
+                }
+                return this.seguroInitDataTemp
+            }
+            case 'UNLOCKED': {
+                this.seguroInitDataTemp.passcode = {
+                    status: 'UNLOCKED',
+                    deletePasscode: this.deletePasscode,
+                    lock: this.lock
+                }
+                return this.seguroInitDataTemp
+            }
+            default: {
+                return this.seguroInitDataTemp
+            }
         }
-
-        if ( this.seguroInitDataTemp.passcord.status === 'UNLOCKED' ) {
-            this.seguroInitDataTemp.passcord.lock = this.lock
-        }
-        
-        return this.seguroInitDataTemp
     }
 
-    private lock = (
-
-    ): Promise < Type.StartWorkerResolve > => {
+    private lock = (): Promise < Type.StartWorkerResolve > => {
         return new Promise((
             resolve
         ) => {
             const cmd:Type.WorkerCommand = {
                 cmd: 'encrypt_lock'
+            }
+            return this.encryptWorker.append(
+                cmd, (err, _cmd) => {
+                    if ( err ) {
+                        logger('createPasscode ERROR', err)
+                        return resolve(['NOT_READY'])
+                    }
+                    const data = _cmd.data[0]
+                    this.seguroInitDataTemp = data
+                    return resolve(['SUCCESS', this.initUIMethod()])
+                }
+            )
+            
+        })
+    }
+
+    private deletePasscode = (): Promise < Type.StartWorkerResolve > => {
+        return new Promise((
+            resolve
+        ) => {
+            const cmd:Type.WorkerCommand = {
+                cmd: 'encrypt_deletePasscode'
             }
             return this.encryptWorker.append(
                 cmd, (err, _cmd) => {
