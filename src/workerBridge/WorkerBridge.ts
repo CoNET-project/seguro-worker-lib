@@ -18,15 +18,15 @@ export default class WorkerBridge {
     public profiles: Type.profile[] = []
     public seguroInitDataTemp: Type.ContainerData | undefined = undefined
 
-    private testPasscord = (
+    private testPasscode = (
         passcode: string,
-        progressCallback: ( progress: number ) => void
+        progressCallback: ( progressInteger: string, progressFractional: string ) => void
     ): Promise < Type.passcodeUnlockStatus > => {
         return new Promise((
             resolve
         ) => {
             const cmd:Type.WorkerCommand = {
-                cmd: 'encrypt_TestPasscord',
+                cmd: 'encrypt_TestPasscode',
                 data: [passcode]
             }
             return this.encryptWorker.append(cmd, (err, _cmd) => {
@@ -35,7 +35,11 @@ export default class WorkerBridge {
                 }
                 const data = _cmd.data[0]
                 if ( typeof data === 'number' ) {
-                    return progressCallback(data)
+                    const t = data * 100
+                    const u = Math.round(t - 0.5)
+                    let p = t - u - 0.005
+                    p = p < 0 ? 0 : p
+                    return progressCallback(u.toString(), p.toFixed(2))
                 }
                 this.seguroInitDataTemp = data
                 return resolve(['SUCCESS', this.initUIMethod()])
@@ -46,7 +50,7 @@ export default class WorkerBridge {
 
     private createPasscode = ( 
         passcode: string,
-        progressCallback: ( progress: number ) => void
+        progressCallback: ( progressInteger: string, progressFractional: string ) => void
     ): Promise < Type.StartWorkerResolve > => {
         return new Promise((
             resolve
@@ -63,7 +67,11 @@ export default class WorkerBridge {
                     }
                     const data = _cmd.data[0]
                     if ( typeof data === 'number' ) {
-                        return progressCallback(data)
+                        const t = (data * 100)
+                        const u = Math.round(t - 0.5)
+                        let p = t - u - 0.005
+                        p = p < 0 ? 0 : p
+                        return progressCallback(u.toString(), p.toFixed(2))
                     }
                     this.seguroInitDataTemp = data
                     return resolve(['SUCCESS', this.initUIMethod()])
@@ -78,24 +86,38 @@ export default class WorkerBridge {
             logger('ERROR: have no this.seguroInitDataTemp')
             return undefined
         }
-        if ( this.seguroInitDataTemp.passcord.status === 'UNDEFINED' ) {
-            this.seguroInitDataTemp.passcord.createPasscode = this.createPasscode
-        }
 
-        if ( this.seguroInitDataTemp.passcord.status === 'LOCKED' ) {
-            this.seguroInitDataTemp.passcord.testPasscord = this.testPasscord
+        switch (this.seguroInitDataTemp.passcode.status) {
+            case 'NOT_SET': {
+                this.seguroInitDataTemp.passcode = {
+                    createPasscode: this.createPasscode,
+                    status: 'NOT_SET'
+                }
+                return this.seguroInitDataTemp
+            }
+            case 'LOCKED': {
+                this.seguroInitDataTemp.passcode = {
+                    status: 'LOCKED',
+                    testPasscode: this.testPasscode,
+                    deletePasscode: this.deletePasscode
+                }
+                return this.seguroInitDataTemp
+            }
+            case 'UNLOCKED': {
+                this.seguroInitDataTemp.passcode = {
+                    status: 'UNLOCKED',
+                    deletePasscode: this.deletePasscode,
+                    lock: this.lock
+                }
+                return this.seguroInitDataTemp
+            }
+            default: {
+                return this.seguroInitDataTemp
+            }
         }
-
-        if ( this.seguroInitDataTemp.passcord.status === 'UNLOCKED' ) {
-            this.seguroInitDataTemp.passcord.lock = this.lock
-        }
-        
-        return this.seguroInitDataTemp
     }
 
-    private lock = (
-
-    ): Promise < Type.StartWorkerResolve > => {
+    private lock = (): Promise < Type.StartWorkerResolve > => {
         return new Promise((
             resolve
         ) => {
@@ -105,7 +127,29 @@ export default class WorkerBridge {
             return this.encryptWorker.append(
                 cmd, (err, _cmd) => {
                     if ( err ) {
-                        logger('createPasscode ERROR', err)
+                        logger('Lock ERROR', err)
+                        return resolve(['NOT_READY'])
+                    }
+                    const data = _cmd.data[0]
+                    this.seguroInitDataTemp = data
+                    return resolve(['SUCCESS', this.initUIMethod()])
+                }
+            )
+            
+        })
+    }
+
+    private deletePasscode = (): Promise < Type.StartWorkerResolve > => {
+        return new Promise((
+            resolve
+        ) => {
+            const cmd:Type.WorkerCommand = {
+                cmd: 'encrypt_deletePasscode'
+            }
+            return this.encryptWorker.append(
+                cmd, (err, _cmd) => {
+                    if ( err ) {
+                        logger('deletePasscode ERROR', err)
                         return resolve(['NOT_READY'])
                     }
                     const data = _cmd.data[0]
@@ -129,23 +173,25 @@ export default class WorkerBridge {
             
             this.callback(['SUCCESS', this.initUIMethod()])
             
-            //         for TEST 
+            //         for TEST createPasscode
             
-            // if ( this.seguroInitDataTemp?.passcord.status === 'UNDEFINED') {
+            // if ( this.seguroInitDataTemp?.passcode.status === 'NOT_SET') {
             //     return this.createPasscode('223344', () => {
-            //         //logger (`process: [${ process }]`)
+            //         logger (`process: [${ process }]`)
             //     }).then((data) => { 
             //         logger('createPasscode SUCCESS', data )
             //     }).catch( (ex) => {
             //         logger('createPasscode ERROR', ex )
             //     })
             // }
+
+            //      for TEST testPasscode
             
-            // if ( this.seguroInitDataTemp?.passcord.status === 'LOCKED') {
-            //     return this.testPasscord('223344', () => {
-            //         //logger (`process: [${ process }]`)
+            // if ( this.seguroInitDataTemp?.passcode.status === 'LOCKED') {
+            //     return this.testPasscode('223344', (pssL, pssR ) => {
+            //         return logger (`process: [${ pssL }][${pssR}]`)
             //     }).then((n) => {
-            //         logger('testPasscord SUCCESS!', n)
+            //         logger('testPasscode SUCCESS!', n)
             //         return this.lock ()
 
             //     })
@@ -153,7 +199,28 @@ export default class WorkerBridge {
             //         logger (`Lock success!`, n )
             //     })
             //     .catch((ex) => {
-            //         logger('testPasscord Error', ex )
+            //         logger('testPasscode Error', ex )
+            //     })
+            // }
+
+            //      for TEST deletePasscode
+            
+            // if ( this.seguroInitDataTemp?.passcode.status === 'LOCKED') {
+            //     return this.testPasscode('223344', () => {
+            //         //logger (`process: [${ process }]`)
+            //     }).then((n) => {
+            //         logger('testPasscode SUCCESS!', n)
+            //         return this.lock ()
+            //     })
+            //     .then (n => {
+            //         logger (`Lock success!`, n )
+            //         return this.deletePasscode ()
+            //     })
+            //     .then (n => {
+            //         logger (`deletePasscode success!`, n )
+            //     })
+            //     .catch((ex) => {
+            //         logger('TEST deletePasscode Error', ex )
             //     })
             // }
             
