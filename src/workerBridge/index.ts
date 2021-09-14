@@ -42,11 +42,11 @@ interface Passcode {
     status: PasscodeStatus
     testPasscode?: (
         passcode: string,
-        progressCallback: ( progressInteger: string, progressFractional: string  ) => void
+        progressCallback: ( progressInteger: string, progressFractional: string ) => void
     ) => Promise <passcodeUnlockStatus>
     createPasscode?: (
         passcode: string,
-        progressCallback: ( progressInteger: string, progressFractional: string  ) => void
+        progressCallback: ( progressInteger: string, progressFractional: string ) => void
     ) => Promise <[WorkerCallStatus, ContainerData?]>
     lock?: () => Promise <[WorkerCallStatus, ContainerData?]>
     deletePasscode?: () => Promise <[WorkerCallStatus, ContainerData?]>

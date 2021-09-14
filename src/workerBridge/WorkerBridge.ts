@@ -38,7 +38,7 @@ export default class WorkerBridge {
                     const t = data * 100
                     const u = Math.round(t - 0.5)
                     let p = t - u - 0.005
-                    p = p < 0 ? 0: p
+                    p = p < 0 ? 0 : p
                     return progressCallback(u.toString(), p.toFixed(2))
                 }
                 this.seguroInitDataTemp = data
@@ -70,7 +70,7 @@ export default class WorkerBridge {
                         const t = (data * 100)
                         const u = Math.round(t - 0.5)
                         let p = t - u - 0.005
-                        p = p < 0 ? 0: p
+                        p = p < 0 ? 0 : p
                         return progressCallback(u.toString(), p.toFixed(2))
                     }
                     this.seguroInitDataTemp = data
@@ -205,24 +205,24 @@ export default class WorkerBridge {
 
             //      for TEST deletePasscode
             
-            if ( this.seguroInitDataTemp?.passcode.status === 'LOCKED') {
-                return this.testPasscode('223344', () => {
-                    //logger (`process: [${ process }]`)
-                }).then((n) => {
-                    logger('testPasscode SUCCESS!', n)
-                    return this.lock ()
-                })
-                .then (n => {
-                    logger (`Lock success!`, n )
-                    return this.deletePasscode ()
-                })
-                .then (n => {
-                    logger (`deletePasscode success!`, n )
-                })
-                .catch((ex) => {
-                    logger('TEST deletePasscode Error', ex )
-                })
-            }
+            // if ( this.seguroInitDataTemp?.passcode.status === 'LOCKED') {
+            //     return this.testPasscode('223344', () => {
+            //         //logger (`process: [${ process }]`)
+            //     }).then((n) => {
+            //         logger('testPasscode SUCCESS!', n)
+            //         return this.lock ()
+            //     })
+            //     .then (n => {
+            //         logger (`Lock success!`, n )
+            //         return this.deletePasscode ()
+            //     })
+            //     .then (n => {
+            //         logger (`deletePasscode success!`, n )
+            //     })
+            //     .catch((ex) => {
+            //         logger('TEST deletePasscode Error', ex )
+            //     })
+            // }
             
         })
     }
