@@ -36,7 +36,7 @@
 
 ### Additions
 
-- testPasscord
+- testPasscode
 
 - createPasscode
 

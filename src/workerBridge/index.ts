@@ -3,7 +3,7 @@ export type WorkerCommandErrorType = 'NOT_READY'|'INVALID_DATA'|
 'PouchDB_ERROR'|'GENERATE_PASSCODE_ERROR'|'FAILURE'|'COUNTDOWN'
 
 export type WorkerCommandType = 'helloWorld'|
-'READY'|'encrypt_TestPasscord'|'encrypt_createPasscode'|'encrypt_lock'|'encrypt_deletePasscode'
+'READY'|'encrypt_TestPasscode'|'encrypt_createPasscode'|'encrypt_lock'|'encrypt_deletePasscode'
 
 export type WorkerCallStatus = 'SUCCESS' | 'NOT_READY' | 'UNKNOWN_COMMAND' | 'TIME_OUT'
 export type PasscodeStatus = 'LOCKED' | 'UNLOCKED' | 'NOT_SET'
@@ -42,11 +42,11 @@ interface Passcode {
     status: PasscodeStatus
     testPasscode?: (
         passcode: string,
-        progressCallback: ( progress: number ) => void
+        progressCallback: ( progressInteger: string, progressFractional: string  ) => void
     ) => Promise <passcodeUnlockStatus>
     createPasscode?: (
         passcode: string,
-        progressCallback: ( progress: number ) => void
+        progressCallback: ( progressInteger: string, progressFractional: string  ) => void
     ) => Promise <[WorkerCallStatus, ContainerData?]>
     lock?: () => Promise <[WorkerCallStatus, ContainerData?]>
     deletePasscode?: () => Promise <[WorkerCallStatus, ContainerData?]>
