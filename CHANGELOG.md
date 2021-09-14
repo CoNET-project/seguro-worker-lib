@@ -1,5 +1,22 @@
 # `seguro-worker-lib` CHANGELOG
 
+## `0.7.0`
+
+### Additions
+
+- deletePasscode
+
+### Changes
+
+- None.
+
+### Fixes
+
+- fixed 'passcord' word
+
+---
+
+
 ## `0.6.1`
 
 ### Additions
