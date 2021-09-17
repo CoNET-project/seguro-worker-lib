@@ -1,5 +1,22 @@
 # `seguro-worker-lib` CHANGELOG
 
+
+## `0.7.1`
+
+### Additions
+
+- None.
+
+### Changes
+
+- None.
+
+### Fixes
+
+- Fixed runtime error!
+
+---
+
 ## `0.7.0`
 
 ### Additions
