@@ -25,13 +25,21 @@ interface Preferences {
     colorTheme: ColorTheme
     language: Language
 }
-
-export interface ContainerData {
+interface PreferencesObj {
     preferences: Preferences
+    storePreferences: (preferences: Preferences)=> Promise <[WorkerCallStatus]>
+}
+interface profileObj {
+    profiles: profile[]
+    addProfile: (profile: profile) => Promise<[WorkerCallStatus]>|null
+    delProfile: (profile: profile) => Promise<[WorkerCallStatus]>|null
+}
+export interface ContainerData {
+    preferences: PreferencesObj
     /*eslint-disable */
     passcode: Passcode
     /*eslint-enable */
-    profiles: profile []
+    profiles: profileObj
     //seguroNetwork: (SeguroNetworkStatus: SeguroNetworkStatus) => void,
 }
 

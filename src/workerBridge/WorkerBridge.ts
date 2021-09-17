@@ -176,8 +176,8 @@ export default class WorkerBridge {
             //         for TEST createPasscode
             
             // if ( this.seguroInitDataTemp?.passcode.status === 'NOT_SET') {
-            //     return this.createPasscode('223344', () => {
-            //         logger (`process: [${ process }]`)
+            //     return this.createPasscode('223344', (R,L) => {
+            //         logger (`process: [${ R }${L}]`)
             //     }).then((data) => { 
             //         logger('createPasscode SUCCESS', data )
             //     }).catch( (ex) => {
@@ -192,12 +192,12 @@ export default class WorkerBridge {
             //         return logger (`process: [${ pssL }][${pssR}]`)
             //     }).then((n) => {
             //         logger('testPasscode SUCCESS!', n)
-            //         return this.lock ()
+            //         //return this.lock ()
 
             //     })
-            //     .then (n => {
-            //         logger (`Lock success!`, n )
-            //     })
+            //     // .then (n => {
+            //     //     logger (`Lock success!`, n )
+            //     // })
             //     .catch((ex) => {
             //         logger('testPasscode Error', ex )
             //     })
