@@ -21,10 +21,12 @@ export interface profile {
     keyID: string
     tags: string[]
 }
+
 interface Preferences {
     colorTheme: ColorTheme
     language: Language
 }
+
 interface PreferencesObj {
     preferences: Preferences
     storePreferences: (preferences: Preferences)=> Promise <[WorkerCallStatus]>
