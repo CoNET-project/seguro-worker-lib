@@ -1,5 +1,20 @@
 # `seguro-worker-lib` CHANGELOG
 
+## `0.8.0`
+
+### Additions
+
+- storePreferences.
+
+### Changes
+
+- None.
+
+### Fixes
+
+- None.
+
+---
 
 ## `0.7.1`
 

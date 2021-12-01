@@ -2,8 +2,8 @@ export type WorkerCommandErrorType = 'NOT_READY'|'INVALID_DATA'|
 'NO_UUID'|'INVALID_COMMAND'|'OPENPGP_RUNNING_ERROR'|
 'PouchDB_ERROR'|'GENERATE_PASSCODE_ERROR'|'FAILURE'|'COUNTDOWN'
 
-export type WorkerCommandType = 'helloWorld'|
-'READY'|'encrypt_TestPasscode'|'encrypt_createPasscode'|'encrypt_lock'|'encrypt_deletePasscode'
+export type WorkerCommandType = 'READY'|'encrypt_TestPasscode'|
+'encrypt_createPasscode'|'encrypt_lock'|'encrypt_deletePasscode'|'storePreferences'
 
 export type WorkerCallStatus = 'SUCCESS' | 'NOT_READY' | 'UNKNOWN_COMMAND' | 'TIME_OUT'
 export type PasscodeStatus = 'LOCKED' | 'UNLOCKED' | 'NOT_SET'
@@ -22,20 +22,19 @@ export interface profile {
     tags: string[]
 }
 
-interface Preferences {
-    colorTheme: ColorTheme
-    language: Language
+interface PreferencesObj {
+    preferences: any
+    /*eslint-disable */
+    storePreferences?: (preferences: any) => Promise <[WorkerCallStatus, ContainerData?]>|null
+    /*eslint-enable */
 }
 
-interface PreferencesObj {
-    preferences: Preferences
-    storePreferences: (preferences: Preferences)=> Promise <[WorkerCallStatus]>
-}
 interface profileObj {
     profiles: profile[]
     addProfile: (profile: profile) => Promise<[WorkerCallStatus]>|null
     delProfile: (profile: profile) => Promise<[WorkerCallStatus]>|null
 }
+
 export interface ContainerData {
     preferences: PreferencesObj
     /*eslint-disable */
@@ -71,7 +70,5 @@ export interface WorkerCommand {
 
 export type CreatePasscodeResolve = 
 [status: WorkerCallStatus, updateProgress?: ( percentage: number ) => void ]
-
-export type HelloWorldResolve = [WorkerCallStatus, string?]
 
 export type StartWorkerResolve = [WorkerCallStatus, ContainerData?]

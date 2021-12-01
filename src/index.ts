@@ -1,1 +1,1 @@
-export { startWorker, helloWorld } from './workerBridge/initWorkers'
+export { startWorker } from './workerBridge/initWorkers'
