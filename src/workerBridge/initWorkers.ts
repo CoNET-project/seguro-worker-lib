@@ -1,8 +1,6 @@
 import WorkerBridge from './WorkerBridge'
-import * as bridge from './bridge'
-import type { HelloWorldResolve, StartWorkerResolve } from './index'
+import type { StartWorkerResolve } from './index'
 import { logger } from './util'
-let bridgeWorker: WorkerBridge
 
 export const startWorker = (): Promise < StartWorkerResolve > => {
     return new Promise((
@@ -18,8 +16,6 @@ export const startWorker = (): Promise < StartWorkerResolve > => {
             resolve(data)
         }
         
-        bridgeWorker = new WorkerBridge(ready)
+        new WorkerBridge(ready)
     })
 }
-
-export const helloWorld = (): Promise<HelloWorldResolve> | null => bridge.helloWorld(bridgeWorker)
