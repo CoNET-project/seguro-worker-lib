@@ -1,9 +1,12 @@
+/* eslint-disable */
+
 import SubWorker from './SubWorker'
 import { logger } from './util'
 import type * as Type from './index'
 const envTest = process.env.NODE_ENV === 'development'
 const localhost = `http://localhost:${envTest ? '3001' : window.location.port}/`
 const helloPath = `${localhost}hello`
+
 
 const helloWorld = ():Promise<Type.HelloWorldResolve> => new Promise((resolve) => fetch(helloPath)
     .then((response) => response.json())
@@ -59,24 +62,22 @@ export default class WorkerBridge {
                 cmd: 'encrypt_createPasscode',
                 data: [passcode, this.seguroInitDataTemp]
             }
-            return this.encryptWorker.append(
-                cmd, (err, _cmd) => {
-                    if ( err ) {
-                        logger('createPasscode ERROR', err)
-                        return resolve(['NOT_READY'])
-                    }
-                    const data = _cmd.data[0]
-                    if ( typeof data === 'number' ) {
-                        const t = (data * 100)
-                        const u = Math.round(t - 0.5)
-                        let p = t - u - 0.005
-                        p = p < 0 ? 0 : p
-                        return progressCallback(u.toString(), p.toFixed(2))
-                    }
-                    this.seguroInitDataTemp = data
-                    return resolve(['SUCCESS', this.initUIMethod()])
+            return this.encryptWorker.append(cmd, (err, _cmd) => {
+                if ( err ) {
+                    logger('createPasscode ERROR', err)
+                    return resolve(['NOT_READY'])
                 }
-            )
+                const data = _cmd.data[0]
+                if ( typeof data === 'number' ) {
+                    const t = (data * 100)
+                    const u = Math.round(t - 0.5)
+                    let p = t - u - 0.005
+                    p = p < 0 ? 0 : p
+                    return progressCallback(u.toString(), p.toFixed(2))
+                }
+                this.seguroInitDataTemp = data
+                return resolve(['SUCCESS', this.initUIMethod()])
+            })
             
         })
     }
@@ -124,17 +125,15 @@ export default class WorkerBridge {
             const cmd:Type.WorkerCommand = {
                 cmd: 'encrypt_lock'
             }
-            return this.encryptWorker.append(
-                cmd, (err, _cmd) => {
-                    if ( err ) {
-                        logger('Lock ERROR', err)
-                        return resolve(['NOT_READY'])
-                    }
-                    const data = _cmd.data[0]
-                    this.seguroInitDataTemp = data
-                    return resolve(['SUCCESS', this.initUIMethod()])
+            return this.encryptWorker.append(cmd, (err, _cmd) => {
+                if ( err ) {
+                    logger('Lock ERROR', err)
+                    return resolve(['NOT_READY'])
                 }
-            )
+                const data = _cmd.data[0]
+                this.seguroInitDataTemp = data
+                return resolve(['SUCCESS', this.initUIMethod()])
+            })
             
         })
     }
@@ -146,17 +145,15 @@ export default class WorkerBridge {
             const cmd:Type.WorkerCommand = {
                 cmd: 'encrypt_deletePasscode'
             }
-            return this.encryptWorker.append(
-                cmd, (err, _cmd) => {
-                    if ( err ) {
-                        logger('deletePasscode ERROR', err)
-                        return resolve(['NOT_READY'])
-                    }
-                    const data = _cmd.data[0]
-                    this.seguroInitDataTemp = data
-                    return resolve(['SUCCESS', this.initUIMethod()])
+            return this.encryptWorker.append(cmd, (err, _cmd) => {
+                if ( err ) {
+                    logger('deletePasscode ERROR', err)
+                    return resolve(['NOT_READY'])
                 }
-            )
+                const data = _cmd.data[0]
+                this.seguroInitDataTemp = data
+                return resolve(['SUCCESS', this.initUIMethod()])
+            })
             
         })
     }
