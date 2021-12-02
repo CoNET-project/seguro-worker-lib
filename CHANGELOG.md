@@ -1,5 +1,21 @@
 # `seguro-worker-lib` CHANGELOG
 
+## `0.9.0`
+
+### Additions
+
+- Added newProfile & storeProfile.
+
+### Changes
+
+- None.
+
+### Fixes
+
+- None.
+
+---
+
 ## `0.8.0`
 
 ### Additions
