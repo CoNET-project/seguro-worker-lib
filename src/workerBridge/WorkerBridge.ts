@@ -3,8 +3,6 @@
 import SubWorker from './SubWorker'
 import { logger } from './util'
 import type * as Type from './index'
-const envTest = process.env.NODE_ENV === 'development'
-
 
 export default class WorkerBridge {
     public encryptWorker
@@ -84,7 +82,6 @@ export default class WorkerBridge {
                     createPasscode: this.createPasscode,
                     status: 'NOT_SET'
                 }
-                this.seguroInitDataTemp.preferences.storePreferences = this.storePreferences
                 return this.seguroInitDataTemp
             }
 
@@ -104,6 +101,8 @@ export default class WorkerBridge {
                     lock: this.lock
                 }
                 this.seguroInitDataTemp.preferences.storePreferences = this.storePreferences
+                this.seguroInitDataTemp.profile.newProfile = this.newProfile
+                this.seguroInitDataTemp.profile.storeProfile = this.storeProfile
                 return this.seguroInitDataTemp
             }
 
@@ -171,6 +170,54 @@ export default class WorkerBridge {
             })
         })
     }
+
+    private newProfile = (profile: Type.profile): Promise < Type.StartWorkerResolve > => {
+        return new Promise((
+            resolve
+        ) => {
+
+            const cmd:Type.WorkerCommand = {
+                cmd: 'newProfile',
+                data:[profile]
+            }
+
+            return this.encryptWorker.append(cmd, (err, _cmd) => {
+                if ( err ) {
+                    logger('newProfile ERROR', err)
+                    return resolve(['NOT_READY'])
+                }
+                if ( _cmd.err ) {
+                    return resolve(['SYSTEM_ERROR'])
+                }
+                this.seguroInitDataTemp = _cmd.data[0]
+                return resolve(['SUCCESS', this.initUIMethod()])
+            })
+        })
+    }
+
+    private storeProfile = (): Promise < Type.StartWorkerResolve > => {
+        return new Promise((
+            resolve
+        ) => {
+
+            const cmd:Type.WorkerCommand = {
+                cmd: 'storeProfile',
+                data: [this.seguroInitDataTemp?.profile.profiles]
+            }
+
+            return this.encryptWorker.append(cmd, (err, _cmd) => {
+                if ( err ) {
+                    logger('storeProfile ERROR', err)
+                    return resolve(['NOT_READY'])
+                }
+                if ( _cmd.err ) {
+                    logger('storeProfile _cmd.err', _cmd.err )
+                    return resolve(['SYSTEM_ERROR'])
+                }
+                return resolve(['SUCCESS'])
+            })
+        })
+    }
     
     public encryptWorkerReady = false
 
@@ -187,13 +234,13 @@ export default class WorkerBridge {
             
             //         for TEST createPasscode
             
-            // if ( this.seguroInitDataTemp?.passcode.status === 'NOT_SET') {
-            //     return this.createPasscode('223344', (R,L) => {
-            //         //logger (`process: [${ R }${L}]`)
-            //     }).then((data) => { 
-            //         logger('createPasscode SUCCESS', data )
-            //     })
-            // }
+            if ( this.seguroInitDataTemp?.passcode.status === 'NOT_SET') {
+                return this.createPasscode('223344', (R,L) => {
+                    //logger (`process: [${ R }${L}]`)
+                }).then((data) => { 
+                    logger('createPasscode SUCCESS', data )
+                })
+            }
 
             //      for TEST testPasscode
             
@@ -228,14 +275,26 @@ export default class WorkerBridge {
             //     })
             // }
 
-
-            //      test storePreferences 
+            // let setup: Type.ContainerData|undefined
+            // //      test storePreferences
             // if ( this.seguroInitDataTemp?.passcode.status === 'LOCKED') {
             //     return this.testPasscode('223344', (pssL, pssR ) => {
             //         //return logger (`process: [${ pssL }][${pssR}]`)
             //     }).then((n) => {
             //         logger('testPasscode SUCCESS!', n)
-            //         console.log ('start storePreferences')
+            //         setup = n[1]
+            //         const profile = this.seguroInitDataTemp?.profile.profiles[0]
+            //         if ( profile ) {
+            //             profile.alias = 'Carol'
+            //             profile.nickname = 'Carol Yan'
+            //             profile.tags = ['Kloak', 'woman']
+            //             profile.nicknameMark = 'kkbb'
+            //         }
+                    
+            //         if ( setup && setup.profile.storeProfile ) {
+            //             return setup.profile.storeProfile ()
+            //         }
+            //         logger(`( setup && setup.profiles.newProfile) === null`)
             //         //@ts-ignore
             //         // this.seguroInitDataTemp?.preferences.preferences = {
             //         //     uuuu: 'sadcsacd',
@@ -244,12 +303,14 @@ export default class WorkerBridge {
             //         // return this.storePreferences()
 
             //     })
-                // .then (n => {
-                //     logger('storePreferences SUCCESS!', n)
-                // })
-                // .then (n => {
-                //     logger (`Lock success!`, n )
-                // })
+            //     .then (n => {
+                   
+            //         logger (`storeProfile SUCCESS`)
+            //         logger (this.seguroInitDataTemp)
+            //     })
+            //     // .then (n => {
+            //     //     logger (`Lock success!`, n )
+            //     // })
             // }
             
         })
