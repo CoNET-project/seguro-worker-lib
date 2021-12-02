@@ -3,9 +3,11 @@ export type WorkerCommandErrorType = 'NOT_READY'|'INVALID_DATA'|
 'PouchDB_ERROR'|'GENERATE_PASSCODE_ERROR'|'FAILURE'|'COUNTDOWN'
 
 export type WorkerCommandType = 'READY'|'encrypt_TestPasscode'|
-'encrypt_createPasscode'|'encrypt_lock'|'encrypt_deletePasscode'|'storePreferences'
+'encrypt_createPasscode'|'encrypt_lock'|'encrypt_deletePasscode'|'storePreferences'|
+'newProfile'|'storeProfile'
 
-export type WorkerCallStatus = 'SUCCESS' | 'NOT_READY' | 'UNKNOWN_COMMAND' | 'TIME_OUT'
+export type WorkerCallStatus = 'SUCCESS' | 'NOT_READY' | 'UNKNOWN_COMMAND' |
+'TIME_OUT' | 'SYSTEM_ERROR'
 export type PasscodeStatus = 'LOCKED' | 'UNLOCKED' | 'NOT_SET'
 export type ColorTheme = 'LIGHT' | 'DARK'
 export type Language = 'en-CA' | 'fr-CA' | 'ja-JP' | 'zh-CN' | 'zh-TW'
@@ -18,8 +20,9 @@ export type SeguroNetworkStatus = WorkerCallStatus |
 export interface profile {
     nicknameMark: string
     nickname: string
-    keyID: string
+    keyID?: string
     tags: string[]
+    alias: string
 }
 
 interface PreferencesObj {
@@ -28,19 +31,19 @@ interface PreferencesObj {
     storePreferences?: (preferences: any) => Promise <[WorkerCallStatus, ContainerData?]>|null
     /*eslint-enable */
 }
-
+/*eslint-disable */
 interface profileObj {
     profiles: profile[]
-    addProfile: (profile: profile) => Promise<[WorkerCallStatus]>|null
-    delProfile: (profile: profile) => Promise<[WorkerCallStatus]>|null
+    newProfile?: (profile: profile) => Promise<StartWorkerResolve>|null
+    storeProfile?: () => Promise<StartWorkerResolve>|null
 }
-
+/*eslint-enable */
 export interface ContainerData {
     preferences: PreferencesObj
     /*eslint-disable */
     passcode: Passcode
     /*eslint-enable */
-    profiles: profileObj
+    profile: profileObj
     //seguroNetwork: (SeguroNetworkStatus: SeguroNetworkStatus) => void,
 }
 
@@ -69,6 +72,6 @@ export interface WorkerCommand {
 }
 
 export type CreatePasscodeResolve = 
-[status: WorkerCallStatus, updateProgress?: ( percentage: number ) => void ]
+    [status: WorkerCallStatus, updateProgress?: ( percentage: number ) => void ]
 
 export type StartWorkerResolve = [WorkerCallStatus, ContainerData?]
