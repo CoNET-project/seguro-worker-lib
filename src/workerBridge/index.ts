@@ -28,14 +28,14 @@ export interface profile {
 interface PreferencesObj {
     preferences: any
     /*eslint-disable */
-    storePreferences?: (preferences: any) => Promise <[WorkerCallStatus, ContainerData?]>|null
+    storePreferences?: (preferences: any) => Promise <[WorkerCallStatus, ContainerData?]>
     /*eslint-enable */
 }
 /*eslint-disable */
 interface profileObj {
     profiles: profile[]
-    newProfile?: (profile: profile) => Promise<StartWorkerResolve>|null
-    storeProfile?: () => Promise<StartWorkerResolve>|null
+    newProfile?: (profile: profile) => Promise<StartWorkerResolve>
+    storeProfile?: () => Promise<StartWorkerResolve>
 }
 /*eslint-enable */
 export interface ContainerData {
