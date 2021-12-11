@@ -36,6 +36,7 @@ interface profileObj {
     profiles: profile[]
     newProfile?: (profile: profile) => Promise<StartWorkerResolve>
     storeProfile?: () => Promise<StartWorkerResolve>
+
 }
 /*eslint-enable */
 export interface ContainerData {
