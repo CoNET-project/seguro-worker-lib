@@ -18,7 +18,7 @@ export type SeguroNetworkStatus = WorkerCallStatus |
 'CONNECTING_SEGURO_NETWORK'
 
 export interface profile {
-    nicknameMark: string
+    bio: string
     nickname: string
     keyID?: string
     tags: string[]
