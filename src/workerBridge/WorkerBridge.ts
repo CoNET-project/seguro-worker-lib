@@ -170,7 +170,7 @@ export default class WorkerBridge {
                     logger('storePreferences ERROR', err)
                     return resolve(['NOT_READY'])
                 }
-                return resolve(['SUCCESS', this.initUIMethod(null)])
+                return resolve(['SUCCESS'])
             })
         })
     }
@@ -234,14 +234,17 @@ export default class WorkerBridge {
             this.callback(['SUCCESS', setup])
             
             //         for TEST createPasscode
+            if ( setup ) {
+                if ( setup.passcode.status === 'NOT_SET') {
+                    //@ts-ignore
+                    return setup.passcode.createPasscode('223344', (R,L) => {
+                        //logger (`process: [${ R }${L}]`)
+                    }).then(() => {
+                        logger('createPasscode SUCCESS', setup )
+                    })
+                }
+            }
             
-            // if ( setup?.passcode.status === 'NOT_SET') {
-            //     return this.createPasscode('223344', (R,L) => {
-            //         //logger (`process: [${ R }${L}]`)
-            //     }).then(() => {
-            //         logger('createPasscode SUCCESS', setup )
-            //     })
-            // }
 
             //      for TEST testPasscode
             
