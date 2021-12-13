@@ -32,8 +32,7 @@ export default class WorkerBridge {
                     p = p < 0 ? 0 : p
                     return progressCallback(u.toString(), p.toFixed(2))
                 }
-                this.seguroInitDataTemp = data
-                return resolve(['SUCCESS', this.initUIMethod()])
+                return resolve(['SUCCESS', this.initUIMethod(data)])
             })
             
         })
@@ -63,20 +62,24 @@ export default class WorkerBridge {
                     p = p < 0 ? 0 : p
                     return progressCallback(u.toString(), p.toFixed(2))
                 }
-                this.seguroInitDataTemp = data
-                return resolve(['SUCCESS', this.initUIMethod()])
+                return resolve(['SUCCESS', this.initUIMethod(data)])
             })
             
         })
     }
 
-    private initUIMethod() {
+    private initUIMethod(data: Type.ContainerData|null) {
         if ( !this.seguroInitDataTemp ) {
-            logger('ERROR: have no this.seguroInitDataTemp')
-            return undefined
+            if ( data ) {
+                this.seguroInitDataTemp = data
+            } else {
+                logger (`initUIMethod have null of data and this.seguroInitDataTemp`)
+                return 
+            }
+            
         }
-        
-        switch (this.seguroInitDataTemp.passcode.status) {
+        const sw = data ? data.passcode.status : this.seguroInitDataTemp?.passcode.status
+        switch (sw) {
             case 'NOT_SET': {
                 this.seguroInitDataTemp.passcode = {
                     createPasscode: this.createPasscode,
@@ -91,6 +94,7 @@ export default class WorkerBridge {
                     testPasscode: this.testPasscode,
                     deletePasscode: this.deletePasscode
                 }
+                this.seguroInitDataTemp.profile = data ? data.profile : { profiles: []}
                 return this.seguroInitDataTemp
             }
 
@@ -100,7 +104,9 @@ export default class WorkerBridge {
                     deletePasscode: this.deletePasscode,
                     lock: this.lock
                 }
+                this.seguroInitDataTemp.preferences = data ? data.preferences : {preferences: null}
                 this.seguroInitDataTemp.preferences.storePreferences = this.storePreferences
+                this.seguroInitDataTemp.profile = data ? data.profile : { profiles:[]}
                 this.seguroInitDataTemp.profile.newProfile = this.newProfile
                 this.seguroInitDataTemp.profile.storeProfile = this.storeProfile
                 return this.seguroInitDataTemp
@@ -125,8 +131,7 @@ export default class WorkerBridge {
                     return resolve(['NOT_READY'])
                 }
                 const data = _cmd.data[0]
-                this.seguroInitDataTemp = data
-                return resolve(['SUCCESS', this.initUIMethod()])
+                return resolve(['SUCCESS', this.initUIMethod(data)])
             })
             
         })
@@ -145,8 +150,7 @@ export default class WorkerBridge {
                     return resolve(['NOT_READY'])
                 }
                 const data = _cmd.data[0]
-                this.seguroInitDataTemp = data
-                return resolve(['SUCCESS', this.initUIMethod()])
+                return resolve(['SUCCESS', this.initUIMethod(data)])
             })
             
         })
@@ -166,7 +170,7 @@ export default class WorkerBridge {
                     logger('storePreferences ERROR', err)
                     return resolve(['NOT_READY'])
                 }
-                return resolve(['SUCCESS', this.initUIMethod()])
+                return resolve(['SUCCESS', this.initUIMethod(null)])
             })
         })
     }
@@ -189,8 +193,7 @@ export default class WorkerBridge {
                 if ( _cmd.err ) {
                     return resolve(['SYSTEM_ERROR'])
                 }
-                this.seguroInitDataTemp = _cmd.data[0]
-                return resolve(['SUCCESS', this.initUIMethod()])
+                return resolve(['SUCCESS', this.initUIMethod(_cmd.data[0])])
             })
         })
     }
@@ -227,28 +230,26 @@ export default class WorkerBridge {
         this.encryptWorker = new SubWorker('encrypt.js', (init: any | null ) => {
             this.encryptWorkerReady = true
             const [InitData] = init
-            this.seguroInitDataTemp = InitData
-            
-            this.callback(['SUCCESS', this.initUIMethod()])
-            
+            let setup = this.initUIMethod(InitData)
+            this.callback(['SUCCESS', setup])
             
             //         for TEST createPasscode
             
-            // if ( this.seguroInitDataTemp?.passcode.status === 'NOT_SET') {
+            // if ( setup?.passcode.status === 'NOT_SET') {
             //     return this.createPasscode('223344', (R,L) => {
             //         //logger (`process: [${ R }${L}]`)
-            //     }).then((data) => { 
-            //         logger('createPasscode SUCCESS', data )
+            //     }).then(() => {
+            //         logger('createPasscode SUCCESS', setup )
             //     })
             // }
 
             //      for TEST testPasscode
             
-            // if ( this.seguroInitDataTemp?.passcode.status === 'LOCKED') {
+            // if ( setup?.passcode.status === 'LOCKED') {
             //     return this.testPasscode('223344', (pssL, pssR ) => {
             //         //return logger (`process: [${ pssL }][${pssR}]`)
-            //     }).then((n) => {
-            //         logger('testPasscode SUCCESS!', n)
+            //     }).then(() => {
+            //         logger('testPasscode SUCCESS!', setup)
             //         //return this.lock ()
 
             //     })
