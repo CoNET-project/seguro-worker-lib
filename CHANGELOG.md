@@ -1,5 +1,20 @@
 # `seguro-worker-lib` CHANGELOG
 
+## `0.9.4`
+
+### Additions
+
+- None.
+
+### Changes
+
+- None.
+
+### Fixes
+
+- fixed containerType
+
+---
 
 ## `0.9.3`
 
@@ -13,7 +28,7 @@
 
 ### Fixes
 
-- Changed nicknameMark 
+- Changed nicknameMark
 
 ---
 
