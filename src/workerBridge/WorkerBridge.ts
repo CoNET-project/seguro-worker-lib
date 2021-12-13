@@ -161,7 +161,7 @@ export default class WorkerBridge {
                 cmd: 'storePreferences',
                 data:[this.seguroInitDataTemp?.preferences.preferences]
             }
-            return this.encryptWorker.append(cmd, (err, _cmd) => {
+            return this.encryptWorker.append (cmd, (err, _cmd) => {
                 if ( err ) {
                     logger('storePreferences ERROR', err)
                     return resolve(['NOT_READY'])
@@ -234,28 +234,48 @@ export default class WorkerBridge {
             
             //         for TEST createPasscode
             
-            if ( this.seguroInitDataTemp?.passcode.status === 'NOT_SET') {
-                return this.createPasscode('223344', (R,L) => {
-                    //logger (`process: [${ R }${L}]`)
-                }).then((data) => { 
-                    logger('createPasscode SUCCESS', data )
-                })
-            }
+            // if ( this.seguroInitDataTemp?.passcode.status === 'NOT_SET') {
+            //     return this.createPasscode('223344', (R,L) => {
+            //         //logger (`process: [${ R }${L}]`)
+            //     }).then((data) => { 
+            //         logger('createPasscode SUCCESS', data )
+            //     })
+            // }
 
-            //      for TEST testPasscode
-            
+            // //      for test storePreferences
+
             // if ( this.seguroInitDataTemp?.passcode.status === 'LOCKED') {
+            //     let setup: any = null
             //     return this.testPasscode('223344', (pssL, pssR ) => {
             //         //return logger (`process: [${ pssL }][${pssR}]`)
             //     }).then((n) => {
             //         logger('testPasscode SUCCESS!', n)
-            //         //return this.lock ()
-
+            //         setup = n[1]
+            //         setup.preferences.preferences = {
+            //             language: 'en',
+            //             light: "Hello"
+            //         }
+            //         return setup.preferences.storePreferences ()
+            //     }).then ( n => {
+            //         logger (n)
             //     })
-            //     // .then (n => {
-            //     //     logger (`Lock success!`, n )
-            //     // })
             // }
+
+
+            //      for TEST testPasscode
+            
+                // if ( this.seguroInitDataTemp?.passcode.status === 'LOCKED') {
+                    // return this.testPasscode('223344', (pssL, pssR ) => {
+                    //     //return logger (`process: [${ pssL }][${pssR}]`)
+                    // }).then((n) => {
+                    //     logger('testPasscode SUCCESS!', n)
+                    //     //return this.lock ()
+
+                    // })
+                    // .then (n => {
+                    //     logger (`Lock success!`, n )
+                    // })
+                // }
 
             //      for TEST deletePasscode
             
@@ -276,7 +296,7 @@ export default class WorkerBridge {
             // }
 
             // let setup: Type.ContainerData|undefined
-            // //      test storePreferences
+            // // //      test storePreferences
             // if ( this.seguroInitDataTemp?.passcode.status === 'LOCKED') {
             //     return this.testPasscode('223344', (pssL, pssR ) => {
             //         //return logger (`process: [${ pssL }][${pssR}]`)
