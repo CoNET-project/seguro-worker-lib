@@ -1,5 +1,22 @@
 # `seguro-worker-lib` CHANGELOG
 
+## `0.9.5`
+
+### Additions
+
+- None.
+
+### Changes
+
+- None.
+
+### Fixes
+
+- fixed storePreferences clear profile array
+
+---
+
+
 ## `0.9.4`
 
 ### Additions
