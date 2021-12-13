@@ -28,7 +28,7 @@ export interface profile {
 interface PreferencesObj {
     preferences: any
     /*eslint-disable */
-    storePreferences?: (preferences: any) => Promise <[WorkerCallStatus, ContainerData?]>
+    storePreferences?: () => Promise <[WorkerCallStatus, ContainerData?]>
     /*eslint-enable */
 }
 /*eslint-disable */

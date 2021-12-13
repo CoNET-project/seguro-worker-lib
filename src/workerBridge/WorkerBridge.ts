@@ -166,7 +166,7 @@ export default class WorkerBridge {
                     logger('storePreferences ERROR', err)
                     return resolve(['NOT_READY'])
                 }
-                return resolve(['SUCCESS'])
+                return resolve(['SUCCESS', this.initUIMethod()])
             })
         })
     }
@@ -234,13 +234,13 @@ export default class WorkerBridge {
             
             //         for TEST createPasscode
             
-            if ( this.seguroInitDataTemp?.passcode.status === 'NOT_SET') {
-                return this.createPasscode('223344', (R,L) => {
-                    //logger (`process: [${ R }${L}]`)
-                }).then((data) => { 
-                    logger('createPasscode SUCCESS', data )
-                })
-            }
+            // if ( this.seguroInitDataTemp?.passcode.status === 'NOT_SET') {
+            //     return this.createPasscode('223344', (R,L) => {
+            //         //logger (`process: [${ R }${L}]`)
+            //     }).then((data) => { 
+            //         logger('createPasscode SUCCESS', data )
+            //     })
+            // }
 
             //      for TEST testPasscode
             
