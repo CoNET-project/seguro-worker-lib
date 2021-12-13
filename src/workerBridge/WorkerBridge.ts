@@ -171,6 +171,7 @@ export default class WorkerBridge {
                     return resolve(['NOT_READY'])
                 }
                 return resolve(['SUCCESS'])
+
             })
         })
     }
@@ -245,6 +246,16 @@ export default class WorkerBridge {
                 }
             }
             
+<<<<<<< HEAD
+=======
+            // if ( setup?.passcode.status === 'NOT_SET') {
+            //     return this.createPasscode('223344', (R,L) => {
+            //         //logger (`process: [${ R }${L}]`)
+            //     }).then(() => {
+            //         logger('createPasscode SUCCESS', setup )
+            //     })
+            // }
+>>>>>>> main
 
             //      for TEST testPasscode
             

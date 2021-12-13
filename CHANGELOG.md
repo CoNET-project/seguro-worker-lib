@@ -1,5 +1,6 @@
 # `seguro-worker-lib` CHANGELOG
 
+<<<<<<< HEAD
 ## `0.9.5`
 
 ### Additions
@@ -16,6 +17,8 @@
 
 ---
 
+=======
+>>>>>>> main
 ## `0.9.4`
 
 ### Additions
