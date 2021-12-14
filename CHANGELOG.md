@@ -1,5 +1,21 @@
 # `seguro-worker-lib` CHANGELOG
 
+## `0.9.6`
+
+### Additions
+
+- None.
+
+### Changes
+
+- Added profileImg, isPrimary
+
+### Fixes
+
+- None.
+
+---
+
 ## `0.9.5`
 
 ### Additions
