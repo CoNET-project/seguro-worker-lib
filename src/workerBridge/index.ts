@@ -23,6 +23,8 @@ export interface profile {
     keyID?: string
     tags: string[]
     alias: string
+    isPrimary: boolean
+    profileImg: string
 }
 
 interface PreferencesObj {
