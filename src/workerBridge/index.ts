@@ -16,8 +16,8 @@ export type SeguroNetworkStatus = WorkerCallStatus |
 'TIMEOUT_EMAIL_SERVER' | 'TIMEOUT_SEGURO_NETWORK' |
 'NO_INTERNET' | 'CONNECTING_ACCESS_POINT' |
 'CONNECTING_SEGURO_NETWORK'|'INIT'|'NOT_STRIPE'|
-'LOCAL_SERVER_ERROR'|'Invitation_code_error'|
-'seguro_error'|'UNKNOW_ERROR'
+'LOCAL_SERVER_ERROR'|'INVITATION_CODE_ERROR'|
+'SEGURO_ERROR'|'UNKNOW_ERROR'|'SEGURO_DATA_FORMAT_ERROR'
 
 export interface profile {
     bio: string
