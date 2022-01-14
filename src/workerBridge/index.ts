@@ -45,10 +45,10 @@ interface profileObj {
 interface seguroNetwork {
     SeguroStatus: SeguroNetworkStatus
     invitation?: (code: string) => Promise <SeguroNetworkStatus>
-    shardInvitation: string[]
+    sharedDeviceInvitation: string[]
     SeguroStatusListening?: (status: SeguroNetworkStatus) => void
     SeguroObject?: {
-        shardInvitation: string[]
+        sharedDeviceInvitation: string[]
         server_listening_folder: string
         
     }

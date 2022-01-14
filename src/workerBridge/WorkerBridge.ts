@@ -134,10 +134,10 @@ export default class WorkerBridge {
                 this.seguroInitDataTemp.profile.newProfile = this.newProfile
                 this.seguroInitDataTemp.profile.storeProfile = this.storeProfile
                 this.seguroInitDataTemp.SeguroNetwork.SeguroStatus = data ? data.SeguroNetwork.SeguroStatus : this.seguroInitDataTemp.SeguroNetwork.SeguroStatus
-                this.seguroInitDataTemp.SeguroNetwork.shardInvitation = data ? data.SeguroNetwork.SeguroObject ? data.SeguroNetwork.SeguroObject.shardInvitation : []: []
-                if ( this.seguroInitDataTemp.SeguroNetwork.SeguroStatus === 'INIT') {
+                this.seguroInitDataTemp.SeguroNetwork.sharedDeviceInvitation = data ? data.SeguroNetwork.SeguroObject ? data.SeguroNetwork.SeguroObject.sharedDeviceInvitation : []: []
+                //if ( this.seguroInitDataTemp.SeguroNetwork.SeguroStatus === 'INIT') {
                     this.seguroInitDataTemp.SeguroNetwork.invitation = this.invitation
-                }
+                //}
 
                 return this.seguroInitDataTemp
             }
@@ -308,14 +308,14 @@ export default class WorkerBridge {
             //         }).then((status) => {
             //             logger('testPasscode SUCCESS!', setup)
             //             if ( setup?.SeguroNetwork.invitation ) {
-            //                 return setup?.SeguroNetwork.invitation ('18BEF922-FB20-4E75-A4EF-EE34025F31FC')
+            //                 return setup?.SeguroNetwork.invitation ('C11A6BDB-4230-430E-AD5C-D36196BF2F70')
             //             }
             //             logger (`! setup?.seguroNetwork.invitation`)
             //         }).then( status => {
             //             if ( status !== 'SUCCESS') {
-            //                 logger('invitation ERROR!', status )
+            //                 return logger('setup?.SeguroNetwork.invitation ERROR', status )
             //             }
-            //             logger ('invitation SUCCESS', setup)
+            //             logger ('setup?.SeguroNetwork.invitation SUCCESS', setup)
             //         })
             //     }
                 

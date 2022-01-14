@@ -1,5 +1,36 @@
 # `seguro-worker-lib` CHANGELOG
 
+
+## `0.10.3`
+
+### Additions
+
+- None.
+
+### Changes
+
+- None.
+
+### Fixes
+
+- Error information.
+
+
+## `0.10.2`
+
+### Additions
+
+- None.
+
+### Changes
+
+- None.
+
+### Fixes
+
+- Local server logger bug.
+
+
 ## `0.10.1`
 
 ### Additions
