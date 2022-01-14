@@ -4,7 +4,7 @@ export type WorkerCommandErrorType = 'NOT_READY'|'INVALID_DATA'|
 
 export type WorkerCommandType = 'READY'|'encrypt_TestPasscode'|
 'encrypt_createPasscode'|'encrypt_lock'|'encrypt_deletePasscode'|'storePreferences'|
-'newProfile'|'storeProfile'
+'newProfile'|'storeProfile'|'invitation'|'WORKER_MESSAGE'
 
 export type WorkerCallStatus = 'SUCCESS' | 'NOT_READY' | 'UNKNOWN_COMMAND' |
 'TIME_OUT' | 'SYSTEM_ERROR'
@@ -15,7 +15,9 @@ export type secondVerificationValume = '1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9'
 export type SeguroNetworkStatus = WorkerCallStatus | 
 'TIMEOUT_EMAIL_SERVER' | 'TIMEOUT_SEGURO_NETWORK' |
 'NO_INTERNET' | 'CONNECTING_ACCESS_POINT' |
-'CONNECTING_SEGURO_NETWORK'
+'CONNECTING_SEGURO_NETWORK'|'INIT'|'NOT_STRIPE'|
+'LOCAL_SERVER_ERROR'|'Invitation_code_error'|
+'seguro_error'|'UNKNOW_ERROR'
 
 export interface profile {
     bio: string
@@ -40,6 +42,17 @@ interface profileObj {
     storeProfile?: () => Promise<StartWorkerResolve>
 
 }
+interface seguroNetwork {
+    SeguroStatus: SeguroNetworkStatus
+    invitation?: (code: string) => Promise <SeguroNetworkStatus>
+    shardInvitation: string[]
+    SeguroStatusListening?: (status: SeguroNetworkStatus) => void
+    SeguroObject?: {
+        shardInvitation: string[]
+        server_listening_folder: string
+        
+    }
+}
 /*eslint-enable */
 export interface ContainerData {
     preferences: PreferencesObj
@@ -47,7 +60,7 @@ export interface ContainerData {
     passcode: Passcode
     /*eslint-enable */
     profile: profileObj
-    //seguroNetwork: (SeguroNetworkStatus: SeguroNetworkStatus) => void,
+    SeguroNetwork: seguroNetwork
 }
 
 export type passcodeUnlockStatus = 

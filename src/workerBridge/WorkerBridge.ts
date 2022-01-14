@@ -68,6 +68,30 @@ export default class WorkerBridge {
         })
     }
 
+    private invitation = (
+        code: string
+    ): Promise < Type.SeguroNetworkStatus > => {
+        return new Promise((
+            resolve
+        ) => {
+            const cmd:Type.WorkerCommand = {
+                cmd: 'invitation',
+                data: [code]
+            }
+            return this.encryptWorker.append(cmd, (err, _cmd) => {
+                if ( err ) {
+                    logger('invitation ERROR', err.message )
+                    //@ts-ignore
+                    return resolve(err.message)
+                }
+                const data = _cmd.data[0]
+                this.initUIMethod(data)
+                return resolve('SUCCESS')
+            })
+            
+        })
+    }
+
     private initUIMethod(data: Type.ContainerData|null) {
         if ( !this.seguroInitDataTemp ) {
             if ( data ) {
@@ -109,6 +133,12 @@ export default class WorkerBridge {
                 this.seguroInitDataTemp.profile = data ? data.profile : { profiles:[]}
                 this.seguroInitDataTemp.profile.newProfile = this.newProfile
                 this.seguroInitDataTemp.profile.storeProfile = this.storeProfile
+                this.seguroInitDataTemp.SeguroNetwork.SeguroStatus = data ? data.SeguroNetwork.SeguroStatus : this.seguroInitDataTemp.SeguroNetwork.SeguroStatus
+                this.seguroInitDataTemp.SeguroNetwork.shardInvitation = data ? data.SeguroNetwork.SeguroObject ? data.SeguroNetwork.SeguroObject.shardInvitation : []: []
+                if ( this.seguroInitDataTemp.SeguroNetwork.SeguroStatus === 'INIT') {
+                    this.seguroInitDataTemp.SeguroNetwork.invitation = this.invitation
+                }
+
                 return this.seguroInitDataTemp
             }
 
@@ -247,27 +277,49 @@ export default class WorkerBridge {
             // }
             
             // if ( setup?.passcode.status === 'NOT_SET') {
-            //     return this.createPasscode('223344', (R,L) => {
-            //         //logger (`process: [${ R }${L}]`)
-            //     }).then(() => {
-            //         logger('createPasscode SUCCESS', setup )
-            //     })
+            //     if ( setup.passcode.createPasscode ) {
+            //         return setup.passcode.createPasscode('223344', (R,L) => {
+            //             //logger (`process: [${ R }${L}]`)
+            //         }).then(() => {
+            //             logger('createPasscode SUCCESS', setup )
+            //         })
+            //     }
+            //     return logger (`!setup.passcode.createPasscode`)
             // }
 
 
-            //      for TEST testPasscode
+            //      for TEST invitation
             
-            // if ( setup?.passcode.status === 'LOCKED') {
-            //     return this.testPasscode('223344', (pssL, pssR ) => {
-            //         //return logger (`process: [${ pssL }][${pssR}]`)
-            //     }).then(() => {
-            //         logger('testPasscode SUCCESS!', setup)
-            //         //return this.lock ()
+            // if ( setup?.passcode.status === 'NOT_SET') {
+            //     if ( setup.passcode.createPasscode ) {
+            //         return setup.passcode.createPasscode('223344', (R,L) => {
+            //             //logger (`process: [${ R }${L}]`)
+            //         }).then(() => {
+            //             logger('createPasscode SUCCESS', setup )
+            //         })
+            //     }
+            //     return logger (`!setup.passcode.createPasscode`)
+            // }
 
-            //     })
-            //     // .then (n => {
-            //     //     logger (`Lock success!`, n )
-            //     // })
+            // if ( setup?.passcode.status === 'LOCKED') {
+            //     if ( setup.passcode.testPasscode ) {
+            //         return setup.passcode.testPasscode('223344', (pssL, pssR ) => {
+            //             //return logger (`process: [${ pssL }][${pssR}]`)
+            //         }).then((status) => {
+            //             logger('testPasscode SUCCESS!', setup)
+            //             if ( setup?.SeguroNetwork.invitation ) {
+            //                 return setup?.SeguroNetwork.invitation ('18BEF922-FB20-4E75-A4EF-EE34025F31FC')
+            //             }
+            //             logger (`! setup?.seguroNetwork.invitation`)
+            //         }).then( status => {
+            //             if ( status !== 'SUCCESS') {
+            //                 logger('invitation ERROR!', status )
+            //             }
+            //             logger ('invitation SUCCESS', setup)
+            //         })
+            //     }
+                
+            //    return logger (`!setup.passcode.testPasscode`)
             // }
 
             //      for TEST deletePasscode
@@ -325,6 +377,22 @@ export default class WorkerBridge {
             //     //     logger (`Lock success!`, n )
             //     // })
             // }
+            
+        }, message => {
+            const data: Type.ContainerData = message.data[0]
+            if ( !data ) {
+                return logger (`SubWorker encrypt.js sent a null data!`)
+            }
+            if (!this.seguroInitDataTemp) {
+                logger (`this.seguroInitDataTemp is NULL ERROR!`)
+                return logger (`Message from SubWorker encrypt.js `, data )
+            }
+            if ( this.seguroInitDataTemp.SeguroNetwork.SeguroStatus !== data.SeguroNetwork.SeguroStatus ) {
+                this.seguroInitDataTemp.SeguroNetwork.SeguroStatus = data.SeguroNetwork.SeguroStatus
+                if ( typeof this.seguroInitDataTemp.SeguroNetwork.SeguroStatusListening === 'function' ) {
+                    this.seguroInitDataTemp.SeguroNetwork.SeguroStatusListening (this.seguroInitDataTemp.SeguroNetwork.SeguroStatus)
+                }
+            }
             
         })
     }
