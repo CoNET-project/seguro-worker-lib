@@ -1,5 +1,6 @@
 # `seguro-worker-lib` CHANGELOG
 
+
 ## `0.10.3`
 
 ### Additions
