@@ -35,6 +35,11 @@ export default class SubWorker {
                 return this.readyBack(cmd.data)
             }
 
+            if ( cmd.cmd === 'WORKER_MESSAGE') {
+                this.workerMessage(cmd.data)
+                return logger('SubWorker got Message from Worker')
+            }
+
             return logger(`SubWorker catch unknow UUID sharedMainWorker Return: ${cmd}`)
         }
         if ( cmd?.err ) {
@@ -46,7 +51,8 @@ export default class SubWorker {
 
     constructor(
         public url: string,
-        private readyBack: (init: ContainerData) => void
+        private readyBack: (init: ContainerData) => void,
+        private workerMessage: (message: WorkerCommand ) => void
     ) {
         const envTest = process.env.NODE_ENV === 'development'
         const localhost = `http://localhost:${envTest ? '3001' : window.location.port}/`

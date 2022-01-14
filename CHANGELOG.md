@@ -1,5 +1,20 @@
 # `seguro-worker-lib` CHANGELOG
 
+## `0.10.0`
+
+### Additions
+
+- Invitation.
+
+### Changes
+
+- None.
+
+### Fixes
+
+- None.
+
+
 ## `0.9.6`
 
 ### Additions
