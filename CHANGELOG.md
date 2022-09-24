@@ -1,5 +1,19 @@
 # `seguro-worker-lib` CHANGELOG
 
+## `0.10.4`
+
+### Additions
+
+- None.
+
+### Changes
+
+- Change project name to @conet-project/seguro-worker-lib.
+
+### Fixes
+
+- None.
+
 
 ## `0.10.3`
 
