@@ -54,7 +54,7 @@ export default class WorkerBridge {
                     logger('createPasscode ERROR', err)
                     return resolve(['NOT_READY'])
                 }
-                const data = _cmd.data[0]
+                const data = _cmd.data[0]||null
                 if ( typeof data === 'number' ) {
                     const t = (data * 100)
                     const u = Math.round(t - 0.5)
@@ -133,11 +133,6 @@ export default class WorkerBridge {
                 this.seguroInitDataTemp.profile = data ? data.profile : { profiles:[]}
                 this.seguroInitDataTemp.profile.newProfile = this.newProfile
                 this.seguroInitDataTemp.profile.storeProfile = this.storeProfile
-                this.seguroInitDataTemp.SeguroNetwork.SeguroStatus = data ? data.SeguroNetwork.SeguroStatus : this.seguroInitDataTemp.SeguroNetwork.SeguroStatus
-                this.seguroInitDataTemp.SeguroNetwork.sharedDeviceInvitation = data ? data.SeguroNetwork.SeguroObject ? data.SeguroNetwork.SeguroObject.sharedDeviceInvitation : []: []
-                //if ( this.seguroInitDataTemp.SeguroNetwork.SeguroStatus === 'INIT') {
-                    this.seguroInitDataTemp.SeguroNetwork.invitation = this.invitation
-                //}
 
                 return this.seguroInitDataTemp
             }
@@ -386,12 +381,6 @@ export default class WorkerBridge {
             if (!this.seguroInitDataTemp) {
                 logger (`this.seguroInitDataTemp is NULL ERROR!`)
                 return logger (`Message from SubWorker encrypt.js `, data )
-            }
-            if ( this.seguroInitDataTemp.SeguroNetwork.SeguroStatus !== data.SeguroNetwork.SeguroStatus ) {
-                this.seguroInitDataTemp.SeguroNetwork.SeguroStatus = data.SeguroNetwork.SeguroStatus
-                if ( typeof this.seguroInitDataTemp.SeguroNetwork.SeguroStatusListening === 'function' ) {
-                    this.seguroInitDataTemp.SeguroNetwork.SeguroStatusListening (this.seguroInitDataTemp.SeguroNetwork.SeguroStatus)
-                }
             }
             
         })
