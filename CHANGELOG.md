@@ -1,5 +1,20 @@
 # `seguro-worker-lib` CHANGELOG
 
+## `0.10.6`
+
+### Additions
+
+- None.
+
+### Changes
+
+- delete Seguro network part.
+
+### Fixes
+
+- None.
+
+
 ## `0.10.4`
 
 ### Additions
