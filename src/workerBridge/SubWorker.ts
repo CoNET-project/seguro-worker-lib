@@ -56,7 +56,8 @@ export default class SubWorker {
     ) {
         const envTest = process.env.NODE_ENV === 'development'
 
-        const localhost = `http://${window.location.hostname}:${envTest ? '3001' : window.location.port}/`
+        const localhost = `http://${window.location.hostname}`
++ `${envTest ? '3001' : window.location.port}/`
         const storageUrlBlob = workerCros(localhost + url)
         this.worker = new Worker(storageUrlBlob, { name: localhost })
         URL.revokeObjectURL(storageUrlBlob)
