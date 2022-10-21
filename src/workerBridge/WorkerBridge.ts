@@ -24,7 +24,7 @@ export default class WorkerBridge {
                 if ( err ) {
                     return resolve(['FAILURE'])
                 }
-                const data = _cmd.data[0]
+                const data: any = _cmd.data[0]
                 if ( typeof data === 'number' ) {
                     const t = data * 100
                     const u = Math.round(t - 0.5)
@@ -92,48 +92,48 @@ export default class WorkerBridge {
         })
     }
 
-    private initUIMethod(data: Type.ContainerData|null) {
+    private initUIMethod(data: any) {
         if ( !this.seguroInitDataTemp ) {
-            if ( data ) {
-                this.seguroInitDataTemp = data
-            } else {
-                logger (`initUIMethod have null of data and this.seguroInitDataTemp`)
-                return 
-            }
-            
+            if ( !data || !data.passcode ) {
+				logger (`initUIMethod have null of data and this.seguroInitDataTemp`)
+                return
+			}
+
+        	this.seguroInitDataTemp = {
+				method:{},
+				data: data,
+				status: data.passcode.status,
+				preferences: data.preferences
+			}
         }
-        const sw = data ? data.passcode.status : this.seguroInitDataTemp?.passcode.status
+		this.seguroInitDataTemp.data = data
+        this.seguroInitDataTemp.preferences = data.preferences
+		const sw = this.seguroInitDataTemp.status = data.passcode.status
         switch (sw) {
             case 'NOT_SET': {
-                this.seguroInitDataTemp.passcode = {
-                    createPasscode: this.createPasscode,
-                    status: 'NOT_SET'
+                this.seguroInitDataTemp.method = {
+					createPasscode: this.createPasscode
                 }
+				
                 return this.seguroInitDataTemp
             }
 
             case 'LOCKED': {
-                this.seguroInitDataTemp.passcode = {
-                    status: 'LOCKED',
-                    testPasscode: this.testPasscode,
-                    deletePasscode: this.deletePasscode
+                this.seguroInitDataTemp.method = {
+					testPasscode: this.testPasscode,
+					deletePasscode: this.deletePasscode
                 }
-                this.seguroInitDataTemp.profile = data ? data.profile : { profiles: []}
                 return this.seguroInitDataTemp
             }
 
             case 'UNLOCKED': {
-                this.seguroInitDataTemp.passcode = {
-                    status: 'UNLOCKED',
+                this.seguroInitDataTemp.method = {
                     deletePasscode: this.deletePasscode,
-                    lock: this.lock
+                    lock: this.lock,
+					storePreferences: this.storePreferences,
+					newProfile: this.newProfile,
+					storeProfile: this.storeProfile
                 }
-                this.seguroInitDataTemp.preferences = data ? data.preferences : {preferences: null}
-                this.seguroInitDataTemp.preferences.storePreferences = this.storePreferences
-                this.seguroInitDataTemp.profile = data ? data.profile : { profiles:[]}
-                this.seguroInitDataTemp.profile.newProfile = this.newProfile
-                this.seguroInitDataTemp.profile.storeProfile = this.storeProfile
-
                 return this.seguroInitDataTemp
             }
 
@@ -155,7 +155,7 @@ export default class WorkerBridge {
                     logger('Lock ERROR', err)
                     return resolve(['NOT_READY'])
                 }
-                const data = _cmd.data[0]
+                const data:any = _cmd.data[0]
                 return resolve(['SUCCESS', this.initUIMethod(data)])
             })
             
@@ -185,10 +185,12 @@ export default class WorkerBridge {
         return new Promise((
             resolve
         ) => {
-
+			if ( !this.seguroInitDataTemp ) {
+				return resolve(['NOT_READY']) 
+			}
             const cmd:Type.WorkerCommand = {
                 cmd: 'storePreferences',
-                data:[this.seguroInitDataTemp?.preferences.preferences]
+                data:[this.seguroInitDataTemp.preferences]
             }
             return this.encryptWorker.append(cmd, (err, _cmd) => {
                 if ( err ) {
@@ -231,7 +233,7 @@ export default class WorkerBridge {
 
             const cmd:Type.WorkerCommand = {
                 cmd: 'storeProfile',
-                data: [this.seguroInitDataTemp?.profile.profiles]
+                data: [this.seguroInitDataTemp?.data.profiles]
             }
 
             return this.encryptWorker.append(cmd, (err, _cmd) => {

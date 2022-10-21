@@ -37,10 +37,9 @@ interface PreferencesObj {
 }
 /*eslint-disable */
 interface profileObj {
-    profiles: profile[]
+    profile: profile
     newProfile?: (profile: profile) => Promise<StartWorkerResolve>
     storeProfile?: () => Promise<StartWorkerResolve>
-
 }
 interface seguroNetwork {
     SeguroStatus: SeguroNetworkStatus
@@ -53,32 +52,55 @@ interface seguroNetwork {
         
     }
 }
+type CryptoAssetHistory = {
+	status: 'Pending'|'Confirmed'
+	amount: number
+	Nonce: number
+	to: string
+	transactionFee: number
+	gasLimit: number
+	gasUsed: number
+	baseFee: number
+	priorityFee: number
+	totalGasFee: number
+	maxFeePerGas: number
+	total: number
+}
+
+interface TokenPreferences {
+	networkName: string						//
+	RpcURL: string							//		Token Contract Address
+	chainID: number							//		Token Decimal
+	currencySymbol: string					//		Token Symbol
+	blockExplorerURL: string
+}
+
+
 /*eslint-enable */
 export interface ContainerData {
-    preferences: PreferencesObj
-    /*eslint-disable */
-    passcode: Passcode
-    /*eslint-enable */
-    profile: profileObj
-    SeguroNetwork: seguroNetwork
+	method: {
+		testPasscode?: (
+			passcode: string,
+			progressCallback: ( progressInteger: string, progressFractional: string ) => void
+		) => Promise <passcodeUnlockStatus>
+		createPasscode?: (
+			passcode: string,
+			progressCallback: ( progressInteger: string, progressFractional: string ) => void
+		) => Promise <[WorkerCallStatus, ContainerData?]>
+		deletePasscode?: () => Promise <[WorkerCallStatus, ContainerData?]>
+		lock?: () => Promise <[WorkerCallStatus, ContainerData?]>
+		storePreferences?: () => Promise <[WorkerCallStatus, ContainerData?]>
+		newProfile?: (profile: profile) => Promise<StartWorkerResolve>
+		storeProfile?: () => Promise<StartWorkerResolve>
+	}
+	status: PasscodeStatus
+	data: any
+	preferences: any
 }
 
 export type passcodeUnlockStatus = 
     [status: 'FAILURE' | 'COUNTDOWN' | WorkerCallStatus, payload?: ContainerData]
 
-interface Passcode {
-    status: PasscodeStatus
-    testPasscode?: (
-        passcode: string,
-        progressCallback: ( progressInteger: string, progressFractional: string ) => void
-    ) => Promise <passcodeUnlockStatus>
-    createPasscode?: (
-        passcode: string,
-        progressCallback: ( progressInteger: string, progressFractional: string ) => void
-    ) => Promise <[WorkerCallStatus, ContainerData?]>
-    lock?: () => Promise <[WorkerCallStatus, ContainerData?]>
-    deletePasscode?: () => Promise <[WorkerCallStatus, ContainerData?]>
-}
 
 export interface WorkerCommand {
     cmd: WorkerCommandType
