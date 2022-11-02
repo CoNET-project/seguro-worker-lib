@@ -384,7 +384,8 @@ export default class WorkerBridge {
                 logger (`this.seguroInitDataTemp is NULL ERROR!`)
                 return logger (`Message from SubWorker encrypt.js `, data )
             }
-            
+            logger (`WorkerBridge have message`)
+			logger (data)
         })
     }
 
