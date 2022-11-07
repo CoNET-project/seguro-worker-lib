@@ -6,7 +6,6 @@ import type * as Type from './index'
 
 export default class WorkerBridge {
     public encryptWorker
-    public profiles: Type.profile[] = []
     public seguroInitDataTemp: Type.ContainerData | undefined = undefined
 
     private testPasscode = (
@@ -37,6 +36,24 @@ export default class WorkerBridge {
             
         })
     }
+
+	private isAddress = ( address: string ): Promise < Type.StartWorkerResolve >  => {
+		return new Promise((
+            resolve
+        ) => {
+			const cmd:Type.WorkerCommand = {
+                cmd: 'isAddress',
+                data: [address]
+            }
+			return this.encryptWorker.append(cmd, (err, _cmd) => {
+				if ( err ) {
+                    logger('createPasscode ERROR', err)
+                    return resolve(['NOT_READY'])
+                }
+				return resolve(['SUCCESS', _cmd.data[0]])
+			})
+		})
+	}
 
     private createPasscode = ( 
         passcode: string,
@@ -92,6 +109,26 @@ export default class WorkerBridge {
         })
     }
 
+	private syncAsset = (): Promise < Type.StartWorkerResolve >  => {
+		return new Promise((
+            resolve
+        ) => {
+			const cmd:Type.WorkerCommand = {
+                cmd: 'syncAsset',
+                data: []
+            }
+			return this.encryptWorker.append(cmd, (err, _cmd) => {
+				if ( err ) {
+                    logger('syncAsset ERROR', err)
+                    return resolve(['NOT_READY'])
+                }
+				if (this.seguroInitDataTemp)
+				this.seguroInitDataTemp.data = _cmd.data[0]
+				return resolve(['SUCCESS'])
+			})
+		})
+	}
+
     private initUIMethod(data: any) {
         if ( !this.seguroInitDataTemp ) {
             if ( !data || !data.passcode ) {
@@ -132,7 +169,11 @@ export default class WorkerBridge {
                     lock: this.lock,
 					storePreferences: this.storePreferences,
 					newProfile: this.newProfile,
-					storeProfile: this.storeProfile
+					storeProfile: this.storeProfile,
+					isAddress: this.isAddress,
+					getFaucet: this.getFaucet,
+					syncAsset: this.syncAsset,
+					sendAsset: this.sendAsset
                 }
                 return this.seguroInitDataTemp
             }
@@ -249,6 +290,51 @@ export default class WorkerBridge {
             })
         })
     }
+
+	private getFaucet = (walletAddr: string ): Promise < Type.StartWorkerResolve > => {
+		return new Promise((
+            resolve
+        ) => {
+			const cmd:Type.WorkerCommand = {
+                cmd: 'getFaucet',
+                data: [walletAddr]
+            }
+
+            return this.encryptWorker.append(cmd, (err, _cmd) => {
+                if ( err ) {
+                    logger('getFaucet ERROR', err)
+                    return resolve(['NOT_READY'])
+                }
+                if ( _cmd.err ) {
+                    logger('getFaucet _cmd.err', _cmd.err )
+                    return resolve(['SYSTEM_ERROR'])
+                }
+                return resolve(['SUCCESS'])
+            })
+		})
+	}
+
+	private sendAsset = (sendAddr: string, total: number, toAddr: string, asset: string ): Promise < Type.StartWorkerResolve > => {
+		return new Promise((
+            resolve
+        ) => {
+			const cmd:Type.WorkerCommand = {
+                cmd: 'sendAsset',
+                data: [sendAddr, total, toAddr]
+            }
+			return this.encryptWorker.append(cmd, (err, _cmd) => {
+                if ( err ) {
+                    logger('sendAsset ERROR', err)
+                    return resolve(['NOT_READY'])
+                }
+                if ( _cmd.err ) {
+                    logger('sendAsset _cmd.err', _cmd.err )
+                    return resolve(['SYSTEM_ERROR'])
+                }
+                return resolve(['SUCCESS'])
+            })
+		})
+	}
     
     public encryptWorkerReady = false
 
