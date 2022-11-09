@@ -1,5 +1,21 @@
 # `seguro-worker-lib` CHANGELOG
 
+## `0.10.28`
+
+### Additions
+
+- buyUSDC, getUSDCPrice, sendAsset, getFaucet
+
+### Changes
+
+- None.
+
+### Fixes
+
+- Global IP address support.
+
+--
+
 ## `0.10.10`
 
 ### Additions
