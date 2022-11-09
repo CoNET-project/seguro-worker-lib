@@ -173,7 +173,9 @@ export default class WorkerBridge {
 					isAddress: this.isAddress,
 					getFaucet: this.getFaucet,
 					syncAsset: this.syncAsset,
-					sendAsset: this.sendAsset
+					sendAsset: this.sendAsset,
+					getUSDCPrice: this.getUSDCPrice,
+					buyUSDC: this.buyUSDC
                 }
                 return this.seguroInitDataTemp
             }
@@ -320,7 +322,7 @@ export default class WorkerBridge {
         ) => {
 			const cmd:Type.WorkerCommand = {
                 cmd: 'sendAsset',
-                data: [sendAddr, total, toAddr]
+                data: [[sendAddr, total, toAddr, asset]]
             }
 			return this.encryptWorker.append(cmd, (err, _cmd) => {
                 if ( err ) {
@@ -335,6 +337,53 @@ export default class WorkerBridge {
             })
 		})
 	}
+
+	private getUSDCPrice = (): Promise < Type.StartWorkerResolve > => {
+		return new Promise((
+            resolve
+        ) => {
+			const cmd:Type.WorkerCommand = {
+                cmd: 'getUSDCPrice',
+                data: []
+            }
+			return this.encryptWorker.append(cmd, (err, _cmd) => {
+                if ( err ) {
+                    logger('sendAsset ERROR', err)
+                    return resolve(['NOT_READY'])
+                }
+                if ( _cmd.err ) {
+                    logger('sendAsset _cmd.err', _cmd.err )
+                    return resolve(['SYSTEM_ERROR'])
+                }
+
+                return resolve(['SUCCESS',  _cmd.data[0]])
+            })
+		})
+	}
+
+	private buyUSDC = (conetVal: number, keyID: string ): Promise < Type.StartWorkerResolve > => {
+		return new Promise((
+            resolve
+        ) => {
+			const cmd:Type.WorkerCommand = {
+                cmd: 'buyUSDC',
+                data: [[conetVal, keyID]]
+            }
+			return this.encryptWorker.append(cmd, (err: any, _cmd: any) => {
+                if ( err ) {
+                    logger('sendAsset ERROR', err)
+                    return resolve(['NOT_READY'])
+                }
+                if ( _cmd.err ) {
+                    logger('sendAsset _cmd.err', _cmd.err )
+                    return resolve(['SYSTEM_ERROR'])
+                }
+
+                return resolve(['SUCCESS',  _cmd.data[0]])
+            })
+		})
+	}
+	
     
     public encryptWorkerReady = false
 

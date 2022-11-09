@@ -5,7 +5,8 @@ export type WorkerCommandErrorType = 'NOT_READY'|'INVALID_DATA'|
 export type WorkerCommandType = 'READY'|'encrypt_TestPasscode'|
 'encrypt_createPasscode'|'encrypt_lock'|'encrypt_deletePasscode'|'storePreferences'|
 'newProfile'|'storeProfile'|'invitation'|'WORKER_MESSAGE'|
-'isAddress'|'getFaucet'|'syncAsset'|'sendAsset'
+'isAddress'|'getFaucet'|'syncAsset'|'sendAsset'|'getUSDCPrice'|
+'buyUSDC'
 
 export type WorkerCallStatus = 'SUCCESS' | 'NOT_READY' | 'UNKNOWN_COMMAND' |
 'TIME_OUT' | 'SYSTEM_ERROR'
@@ -53,6 +54,8 @@ export interface ContainerData {
 		getFaucet?: (address: string) => Promise <StartWorkerResolve>
 		syncAsset?: () => Promise<StartWorkerResolve>
 		sendAsset?: (sendAddr: string, total: number, toAddr: string, asset: string ) => Promise<StartWorkerResolve>
+		getUSDCPrice?: () => Promise<StartWorkerResolve>
+		buyUSDC?: (conetVal: number, keyID: string) => Promise<StartWorkerResolve>
     }
     status: PasscodeStatus
     data: any
