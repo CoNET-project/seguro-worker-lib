@@ -67,7 +67,7 @@ export default class SubWorker {
             return this.catchReturn(e.data)
         }
         this.worker.onerror = (ev) => {
-            logger(ev);
+            logger(ev)
         }
     }
 
