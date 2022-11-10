@@ -1,5 +1,40 @@
 # `seguro-worker-lib` CHANGELOG
 
+## `0.11.2`
+
+### Additions
+
+- None.
+
+### Changes
+
+- None.
+
+### Fixes
+
+- Bug fixed
+
+--
+
+
+
+## `0.11.1`
+
+### Additions
+
+- None.
+
+### Changes
+
+- None.
+
+### Fixes
+
+- https support
+
+--
+
+
 ## `0.10.28`
 
 ### Additions
