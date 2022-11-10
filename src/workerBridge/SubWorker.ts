@@ -55,10 +55,10 @@ export default class SubWorker {
         private workerMessage: (message: WorkerCommand ) => void
     ) {
         const envTest = process.env.NODE_ENV === 'development'
-		let localhost = window.location.href
-		if (envTest) {
-			localhost = localhost.replace ('3000', '3001')
-		}
+        let localhost = window.location.href
+        if (envTest) {
+            localhost = localhost.replace('3000', '3001')
+        }
         
         const storageUrlBlob = workerCros(localhost + url)
         this.worker = new Worker(storageUrlBlob, { name: localhost })
@@ -67,7 +67,7 @@ export default class SubWorker {
             return this.catchReturn(e.data)
         }
         this.worker.onerror = (ev) => {
-            logger(ev)
+            logger(ev);
         }
     }
 
