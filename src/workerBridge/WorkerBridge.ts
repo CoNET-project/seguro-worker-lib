@@ -55,6 +55,24 @@ export default class WorkerBridge {
 		})
 	}
 
+	private mintCoNETCash = (usdcVal: number, keyID: string): Promise<Type.StartWorkerResolve> => {
+		return new Promise((
+            resolve
+        ) => {
+			const cmd:Type.WorkerCommand = {
+                cmd: 'mintCoNETCash',
+                data: [[usdcVal, keyID]]
+            }
+			return this.encryptWorker.append(cmd, (err, _cmd) => {
+				if ( err ) {
+                    logger('createPasscode ERROR', err)
+                    return resolve(['NOT_READY'])
+                }
+				return resolve(['SUCCESS', _cmd.data[0]])
+			})
+		})
+	}
+
     private createPasscode = ( 
         passcode: string,
         progressCallback: ( progressInteger: string, progressFractional: string ) => void
@@ -175,7 +193,8 @@ export default class WorkerBridge {
 					syncAsset: this.syncAsset,
 					sendAsset: this.sendAsset,
 					getUSDCPrice: this.getUSDCPrice,
-					buyUSDC: this.buyUSDC
+					buyUSDC: this.buyUSDC,
+					mintCoNETCash: this.mintCoNETCash
                 }
                 return this.seguroInitDataTemp
             }

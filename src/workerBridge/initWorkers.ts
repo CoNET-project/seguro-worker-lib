@@ -9,7 +9,7 @@ export const startWorker = (): Promise < StartWorkerResolve > => {
         logger('startWorker')
         const time = setTimeout(() => {
             return resolve(['TIME_OUT'])
-        }, 5000)
+        }, 30000)
 
         const ready = ( data: StartWorkerResolve) => {
             clearTimeout(time)
