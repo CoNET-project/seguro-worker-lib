@@ -1,5 +1,40 @@
 # `seguro-worker-lib` CHANGELOG
 
+## `0.11.4`
+
+### Additions
+
+- mintCoNETCash.
+
+### Changes
+
+- None.
+
+### Fixes
+
+- None.
+
+--
+
+
+## `0.11.3`
+
+### Additions
+
+- None.
+
+### Changes
+
+- None.
+
+### Fixes
+
+- Bug fixed for first time launch freeze(Timeout too short)
+
+--
+
+
+
 ## `0.11.2`
 
 ### Additions

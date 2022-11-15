@@ -6,7 +6,7 @@ export type WorkerCommandType = 'READY'|'encrypt_TestPasscode'|
 'encrypt_createPasscode'|'encrypt_lock'|'encrypt_deletePasscode'|'storePreferences'|
 'newProfile'|'storeProfile'|'invitation'|'WORKER_MESSAGE'|
 'isAddress'|'getFaucet'|'syncAsset'|'sendAsset'|'getUSDCPrice'|
-'buyUSDC'
+'buyUSDC'|'mintCoNETCash'
 
 export type WorkerCallStatus = 'SUCCESS' | 'NOT_READY' | 'UNKNOWN_COMMAND' |
 'TIME_OUT' | 'SYSTEM_ERROR'
@@ -56,6 +56,7 @@ export interface ContainerData {
 		sendAsset?: (sendAddr: string, total: number, toAddr: string, asset: string ) => Promise<StartWorkerResolve>
 		getUSDCPrice?: () => Promise<StartWorkerResolve>
 		buyUSDC?: (conetVal: number, keyID: string) => Promise<StartWorkerResolve>
+		mintCoNETCash?: (usdcVal: number, keyID: string ) => Promise<StartWorkerResolve>
     }
     status: PasscodeStatus
     data: any
