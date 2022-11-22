@@ -1,5 +1,21 @@
 # `seguro-worker-lib` CHANGELOG
 
+## `0.12.1`
+
+### Additions
+
+- Get list of CoNET-SI network nodes.
+
+### Changes
+
+- None.
+
+### Fixes
+
+- None.
+
+--
+
 ## `0.11.4`
 
 ### Additions
