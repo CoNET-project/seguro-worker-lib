@@ -21,9 +21,6 @@ export type SeguroNetworkStatus = WorkerCallStatus |
 'LOCAL_SERVER_ERROR'|'INVITATION_CODE_ERROR'|
 'SEGURO_ERROR'|'UNKNOW_ERROR'|'SEGURO_DATA_FORMAT_ERROR'
 
-
-
-
 /*eslint-disable */
 export interface profile {
     bio: string
