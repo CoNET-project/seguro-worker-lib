@@ -4,6 +4,8 @@ import SubWorker from './SubWorker'
 import { logger } from './util'
 import type * as Type from './index'
 
+
+
 export default class WorkerBridge {
     public encryptWorker
     public seguroInitDataTemp: Type.ContainerData | undefined = undefined
@@ -194,7 +196,8 @@ export default class WorkerBridge {
 					sendAsset: this.sendAsset,
 					getUSDCPrice: this.getUSDCPrice,
 					buyUSDC: this.buyUSDC,
-					mintCoNETCash: this.mintCoNETCash
+					mintCoNETCash: this.mintCoNETCash,
+					getSINodes: this.getSINodes
                 }
                 return this.seguroInitDataTemp
             }
@@ -389,6 +392,27 @@ export default class WorkerBridge {
                 data: [[conetVal, keyID]]
             }
 			return this.encryptWorker.append(cmd, (err: any, _cmd: any) => {
+                if ( err ) {
+                    logger('sendAsset ERROR', err)
+                    return resolve(['NOT_READY'])
+                }
+                if ( _cmd.err ) {
+                    logger('sendAsset _cmd.err', _cmd.err )
+                    return resolve(['SYSTEM_ERROR'])
+                }
+
+                return resolve(['SUCCESS',  _cmd.data[0]])
+            })
+		})
+	}
+
+	private getSINodes = (sortby: Type.SINodesSortby, region: Type.SINodesRegion): Promise < Type.StartWorkerResolve > => {
+		return new Promise (resolve => {
+			const _cmd: Type.WorkerCommand = {
+                cmd: 'getSINodes',
+                data: [[sortby, region]]
+            }
+			return this.encryptWorker.append(_cmd, (err: any, _cmd: any) => {
                 if ( err ) {
                     logger('sendAsset ERROR', err)
                     return resolve(['NOT_READY'])

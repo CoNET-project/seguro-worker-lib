@@ -6,7 +6,7 @@ export type WorkerCommandType = 'READY'|'encrypt_TestPasscode'|
 'encrypt_createPasscode'|'encrypt_lock'|'encrypt_deletePasscode'|'storePreferences'|
 'newProfile'|'storeProfile'|'invitation'|'WORKER_MESSAGE'|
 'isAddress'|'getFaucet'|'syncAsset'|'sendAsset'|'getUSDCPrice'|
-'buyUSDC'|'mintCoNETCash'
+'buyUSDC'|'mintCoNETCash'|'getSINodes'
 
 export type WorkerCallStatus = 'SUCCESS' | 'NOT_READY' | 'UNKNOWN_COMMAND' |
 'TIME_OUT' | 'SYSTEM_ERROR'
@@ -20,6 +20,7 @@ export type SeguroNetworkStatus = WorkerCallStatus |
 'CONNECTING_SEGURO_NETWORK'|'INIT'|'NOT_STRIPE'|
 'LOCAL_SERVER_ERROR'|'INVITATION_CODE_ERROR'|
 'SEGURO_ERROR'|'UNKNOW_ERROR'|'SEGURO_DATA_FORMAT_ERROR'
+
 /*eslint-disable */
 export interface profile {
     bio: string
@@ -34,6 +35,10 @@ export interface profile {
 export type passcodeUnlockStatus = 
     [status: 'FAILURE' | 'COUNTDOWN' | WorkerCallStatus, payload?: ContainerData]
 
+export type SINodesSortby = 'CUSTOMER_REVIEW'|'TOTAL_ONLINE_TIME'|
+	'STORAGE_PRICE_LOW'|'STORAGE_PRICE_HIGH'|'OUTBOUND_PRICE_HIGH'|'OUTBOUND_PRICE_LOW'
+	
+export type SINodesRegion = 'USA'|'UK'|'ES'|'DE'
 
 export interface ContainerData {
     method: {
@@ -57,6 +62,7 @@ export interface ContainerData {
 		getUSDCPrice?: () => Promise<StartWorkerResolve>
 		buyUSDC?: (conetVal: number, keyID: string) => Promise<StartWorkerResolve>
 		mintCoNETCash?: (usdcVal: number, keyID: string ) => Promise<StartWorkerResolve>
+		getSINodes?: (sortby: SINodesSortby, region: SINodesRegion) => Promise < StartWorkerResolve >
     }
     status: PasscodeStatus
     data: any
