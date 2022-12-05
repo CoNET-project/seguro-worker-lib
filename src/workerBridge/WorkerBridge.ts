@@ -197,7 +197,8 @@ export default class WorkerBridge {
 					getUSDCPrice: this.getUSDCPrice,
 					buyUSDC: this.buyUSDC,
 					mintCoNETCash: this.mintCoNETCash,
-					getSINodes: this.getSINodes
+					getSINodes: this.getSINodes,
+					getRecipientCoNETCashAddress: this.getRecipientCoNETCashAddress
                 }
                 return this.seguroInitDataTemp
             }
@@ -356,6 +357,29 @@ export default class WorkerBridge {
                     return resolve(['SYSTEM_ERROR'])
                 }
                 return resolve(['SUCCESS'])
+            })
+		})
+	}
+
+	private getRecipientCoNETCashAddress = (): Promise < Type.StartWorkerResolve > => {
+		return new Promise((
+            resolve
+        ) => {
+			const cmd:Type.WorkerCommand = {
+                cmd: 'getRecipientCoNETCashAddress',
+                data: []
+            }
+			return this.encryptWorker.append(cmd, (err, _cmd) => {
+                if ( err ) {
+                    logger('getRecipientCoNETCashAddress ERROR', err)
+                    return resolve(['NOT_READY'])
+                }
+                if ( _cmd.err ) {
+                    logger('sendAsset _cmd.err', _cmd.err )
+                    return resolve(['SYSTEM_ERROR'])
+                }
+
+                return resolve(['SUCCESS',  _cmd.data[0]])
             })
 		})
 	}
