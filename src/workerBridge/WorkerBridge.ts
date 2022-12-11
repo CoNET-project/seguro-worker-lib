@@ -361,7 +361,7 @@ export default class WorkerBridge {
 		})
 	}
 
-	private getRecipientCoNETCashAddress = (): Promise < Type.StartWorkerResolve > => {
+	private getRecipientCoNETCashAddress = (amount: number): Promise < Type.StartWorkerResolve > => {
 		return new Promise((
             resolve
         ) => {
