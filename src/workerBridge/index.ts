@@ -63,7 +63,7 @@ export interface ContainerData {
 		buyUSDC?: (conetVal: number, keyID: string) => Promise<StartWorkerResolve>
 		mintCoNETCash?: (usdcVal: number, keyID: string ) => Promise<StartWorkerResolve>
 		getSINodes?: (sortby: SINodesSortby, region: SINodesRegion) => Promise < StartWorkerResolve >
-		getRecipientCoNETCashAddress?: () => Promise<StartWorkerResolve>
+		getRecipientCoNETCashAddress?: (amount: number) => Promise<StartWorkerResolve>
     }
     status: PasscodeStatus
     data: any
