@@ -367,7 +367,7 @@ export default class WorkerBridge {
         ) => {
 			const cmd:Type.WorkerCommand = {
                 cmd: 'getRecipientCoNETCashAddress',
-                data: []
+                data: [amount]
             }
 			return this.encryptWorker.append(cmd, (err, _cmd) => {
                 if ( err ) {
