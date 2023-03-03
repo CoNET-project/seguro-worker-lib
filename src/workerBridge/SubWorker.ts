@@ -26,9 +26,10 @@ export default class SubWorker {
         }
 
         let getCallBack = null
+
         if (cmd?.uuid) {
             getCallBack = this.cmdArray.get(cmd.uuid)
-        }
+        } 
 
         if (!getCallBack) {
             if (cmd.cmd === 'READY') {
@@ -42,6 +43,7 @@ export default class SubWorker {
 
             return logger(`SubWorker catch unknow UUID sharedMainWorker Return: ${cmd}`)
         }
+
         if ( cmd?.err ) {
             return getCallBack(new Error(cmd.err), cmd)
         }

@@ -198,7 +198,9 @@ export default class WorkerBridge {
 					buyUSDC: this.buyUSDC,
 					mintCoNETCash: this.mintCoNETCash,
 					getSINodes: this.getSINodes,
-					getRecipientCoNETCashAddress: this.getRecipientCoNETCashAddress
+					getRecipientCoNETCashAddress: this.getRecipientCoNETCashAddress,
+					getUserProfile: this.getUserProfile,
+					sendMessage: this.sendMessage
                 }
                 return this.seguroInitDataTemp
             }
@@ -361,7 +363,7 @@ export default class WorkerBridge {
 		})
 	}
 
-	private getRecipientCoNETCashAddress = (amount: number): Promise < Type.StartWorkerResolve > => {
+	private getRecipientCoNETCashAddress = (amount: number, CallBack: (data: any)=> void): Promise < Type.StartWorkerResolve > => {
 		return new Promise((
             resolve
         ) => {
@@ -369,17 +371,23 @@ export default class WorkerBridge {
                 cmd: 'getRecipientCoNETCashAddress',
                 data: [amount]
             }
+			let first = true
 			return this.encryptWorker.append(cmd, (err, _cmd) => {
-                if ( err ) {
-                    logger('getRecipientCoNETCashAddress ERROR', err)
-                    return resolve(['NOT_READY'])
-                }
-                if ( _cmd.err ) {
-                    logger('sendAsset _cmd.err', _cmd.err )
-                    return resolve(['SYSTEM_ERROR'])
-                }
-
-                return resolve(['SUCCESS',  _cmd.data[0]])
+				if (first ) {
+					first = false
+					if ( err ) {
+						logger('getRecipientCoNETCashAddress ERROR', err)
+						return resolve(['NOT_READY'])
+					}
+					if ( _cmd.err ) {
+						logger('sendAsset _cmd.err', _cmd.err )
+						return resolve(['SYSTEM_ERROR'])
+					}
+					
+					return resolve(['SUCCESS',  _cmd.data[0]])
+				}
+				CallBack (_cmd.data[0])
+                
             })
 		})
 	}
@@ -446,6 +454,52 @@ export default class WorkerBridge {
                     return resolve(['SYSTEM_ERROR'])
                 }
 
+                return resolve(['SUCCESS',  _cmd.data[0]])
+            })
+		})
+	}
+
+	private getUserProfile = (walletAddr: string ): Promise < Type.StartWorkerResolve > => {
+		return new Promise((
+            resolve
+        ) => {
+			const cmd:Type.WorkerCommand = {
+                cmd: 'getUserProfile',
+                data: [walletAddr]
+            }
+
+            return this.encryptWorker.append(cmd, (err, _cmd: any) => {
+                if ( err ) {
+                    logger('getFaucet ERROR', err)
+                    return resolve(['NOT_READY'])
+                }
+                if ( _cmd.err ) {
+                    logger('getFaucet _cmd.err', _cmd.err )
+                    return resolve(['SYSTEM_ERROR'])
+                }
+                return resolve(['SUCCESS',  _cmd.data[0]])
+            })
+		})
+	}
+
+	private sendMessage = (keyAddress: string, message: string): Promise < Type.StartWorkerResolve > => {
+		return new Promise((
+            resolve
+        ) => {
+			const cmd:Type.WorkerCommand = {
+                cmd: 'sendMessage',
+                data: [keyAddress, message]
+            }
+
+            return this.encryptWorker.append(cmd, (err, _cmd: any) => {
+                if ( err ) {
+                    logger('getFaucet ERROR', err)
+                    return resolve(['NOT_READY'])
+                }
+                if ( _cmd.err ) {
+                    logger('getFaucet _cmd.err', _cmd.err )
+                    return resolve(['SYSTEM_ERROR'])
+                }
                 return resolve(['SUCCESS',  _cmd.data[0]])
             })
 		})
