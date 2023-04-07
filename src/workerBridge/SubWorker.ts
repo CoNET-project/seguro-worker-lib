@@ -6,7 +6,7 @@ const workerCros = (
     url: string
 ) => {
     const iss = `importScripts('${url}');`
-    return URL.createObjectURL(new Blob([iss], { type: 'application/javascript'  }))
+    return URL.createObjectURL(new Blob([iss], { type: 'application/javascript' }))
 }
 
 export default class SubWorker {
@@ -63,7 +63,7 @@ export default class SubWorker {
         }
         
         const storageUrlBlob = workerCros(localhost + url)
-        this.worker = new Worker(storageUrlBlob, { name: localhost,  })
+        this.worker = new Worker(storageUrlBlob, { name: localhost })
         URL.revokeObjectURL(storageUrlBlob)
         this.worker.onmessage = (e) => {
             return this.catchReturn(e.data)
